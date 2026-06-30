@@ -1,0 +1,12 @@
+fastapi>=0.110
+uvicorn[standard]>=0.29
+python-multipart>=0.0.9
+numpy>=1.26
+pandas>=2.2
+scipy>=1.12
+scikit-image>=0.22
+PyWavelets>=1.6
+Pillow>=10.0
+matplotlib>=3.8
+pytest>=8.0
+pydantic>=2.6
