@@ -39,6 +39,15 @@ def apply_gaussian(image: np.ndarray, sigma: float = 1.0) -> np.ndarray:
     return ensure_float01(scipy_gaussian_filter(image, sigma=sigma))
 
 
+def _soft_threshold(coeff: np.ndarray, threshold: float) -> np.ndarray:
+    if not np.isfinite(threshold) or threshold <= 0.0:
+        return np.asarray(coeff, dtype=np.float32)
+    coeff = np.asarray(coeff, dtype=np.float32)
+    magnitude = np.abs(coeff)
+    shrink = np.maximum(magnitude - threshold, 0.0)
+    return np.sign(coeff) * shrink
+
+
 def apply_wavelet_denoise(image: np.ndarray, wavelet_name: str = "haar", level: int = 2) -> np.ndarray:
     image = ensure_float01(image)
     coeffs = pywt.wavedec2(image, wavelet=wavelet_name, level=level)
@@ -49,7 +58,7 @@ def apply_wavelet_denoise(image: np.ndarray, wavelet_name: str = "haar", level: 
 
     new_coeffs = [coeffs[0]]
     for detail in coeffs[1:]:
-        new_coeffs.append(tuple(pywt.threshold(c, threshold, mode="soft") for c in detail))
+        new_coeffs.append(tuple(_soft_threshold(c, threshold) for c in detail))
 
     reconstructed = pywt.waverec2(new_coeffs, wavelet=wavelet_name)
     reconstructed = reconstructed[: image.shape[0], : image.shape[1]]
@@ -58,6 +67,8 @@ def apply_wavelet_denoise(image: np.ndarray, wavelet_name: str = "haar", level: 
 
 def apply_nlm(image: np.ndarray, h: float | None = None, patch_size: int = 5, patch_distance: int = 6) -> np.ndarray:
     image = ensure_float01(image)
+    if float(np.std(image)) <= 1e-8:
+        return image.astype(np.float32, copy=True)
     sigma = float(np.mean(estimate_sigma(image, channel_axis=None)))
     h_value = h if h is not None else max(0.8 * sigma, 0.01)
     out = denoise_nl_means(

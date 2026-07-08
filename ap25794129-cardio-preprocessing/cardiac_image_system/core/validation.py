@@ -21,7 +21,9 @@ def validate_patient_level_split(train: pd.DataFrame, val: pd.DataFrame, test: p
 
 def aggregate_patient_level(results: pd.DataFrame) -> pd.DataFrame:
     numeric_cols = results.select_dtypes(include="number").columns.tolist()
-    group_cols = ["patient_id", "mode"]
+    group_cols = [col for col in ["patient_id", "mode"] if col in results.columns]
+    if not group_cols:
+        raise ValueError("aggregate_patient_level requires at least a patient_id column")
     return results.groupby(group_cols, as_index=False)[numeric_cols].mean()
 
 

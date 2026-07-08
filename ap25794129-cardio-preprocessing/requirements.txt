@@ -8,5 +8,7 @@ scikit-image>=0.22
 PyWavelets>=1.6
 Pillow>=10.0
 matplotlib>=3.8
+nibabel>=5.2
+torch>=2.2
 pytest>=8.0
 pydantic>=2.6

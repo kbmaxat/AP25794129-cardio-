@@ -20,8 +20,13 @@ def load_manifest(path: str | Path) -> pd.DataFrame:
 
 
 def summarize_manifest(df: pd.DataFrame) -> dict:
-    return {
+    summary = {
         "num_rows": int(len(df)),
         "num_patients": int(df["patient_id"].nunique()),
         "phases": sorted(map(str, df["phase"].dropna().unique())),
     }
+    if "dataset" in df.columns:
+        summary["datasets"] = sorted(map(str, df["dataset"].dropna().unique()))
+    if "subset" in df.columns:
+        summary["subsets"] = sorted(map(str, df["subset"].dropna().unique()))
+    return summary

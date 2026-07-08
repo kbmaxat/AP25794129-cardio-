@@ -116,10 +116,89 @@ python -m cardiac_image_system.experiments.run_preprocessing_comparison   --mani
 
 ## Next development steps for Codex
 
-1. Add DICOM/NIfTI loaders.
-2. Add patient-level train/validation/test split generator.
-3. Add U-Net locked inference experiment.
-4. Add mode-specific U-Net training experiment.
-5. Add bootstrap confidence intervals and Wilcoxon/Holm reporting.
-6. Add GitHub Actions tests.
-7. Add a minimal web UI.
+1. Add locked external-validation benchmarks across ACDC and CAMUS.
+2. Add mode-specific U-Net training experiment with statistical testing.
+3. Add bootstrap confidence intervals and Wilcoxon/Holm reporting.
+4. Add GitHub Actions tests.
+5. Add a minimal web UI.
+
+## U-Net baseline experiment
+
+Run a compact downstream segmentation baseline on a manifest:
+
+```bash
+python -m cardiac_image_system.experiments.train_unet_baseline ^
+  --manifest data/manifests_local/segmentation_public_combined.csv ^
+  --output-dir outputs/unet_baseline_combined_none ^
+  --mode none ^
+  --epochs 10 ^
+  --batch-size 8
+```
+
+Useful options:
+
+- `--dataset-filter ACDC`
+- `--dataset-filter CAMUS`
+- `--mode gaussian|wavelet|nlm|clahe|hybrid`
+- `--max-train-samples 128 --max-val-samples 64 --max-test-samples 64` for smoke tests
+
+Main outputs:
+
+- `resolved_splits/*.csv`
+- `history.csv`
+- `test_slice_level.csv`
+- `test_patient_level.csv`
+- `summary.json`
+- `checkpoint_best.pt`
+
+Run all preprocessing modes:
+
+```powershell
+.\scripts\run_unet_mode_grid.ps1 -DatasetFilter ACDC -Epochs 10 -BatchSize 8
+```
+
+Each grid run is written into a unique timestamped session folder under `outputs/unet_mode_grid/`.
+
+Run the remaining public segmentation suite after an active ACDC job finishes:
+
+```powershell
+.\scripts\run_public_segmentation_suite.ps1 -AfterProcessId 9736 -Epochs 10 -BatchSize 8
+```
+
+This follow-up script runs:
+
+1. `CAMUS`
+2. `ACDC + CAMUS` combined
+
+## Reviewer-driven binary follow-up scripts
+
+Run the top-3 binary modes (`none`, `wavelet`, `nlm`) across multiple seeds on CAMUS:
+
+```powershell
+.\scripts\run_unet_camus_multiseed_top3.ps1
+```
+
+Run the same multi-seed sweep on the mixed `ACDC + CAMUS` corpus:
+
+```powershell
+.\scripts\run_unet_combined_multiseed_top3.ps1
+```
+
+Run a long-schedule CAMUS follow-up with early stopping:
+
+```powershell
+.\scripts\run_unet_camus_longschedule_top3.ps1
+```
+
+Run the same long-schedule follow-up on the mixed corpus:
+
+```powershell
+.\scripts\run_unet_combined_longschedule_top3.ps1
+```
+
+Summarize a completed multi-seed session:
+
+```bash
+python scripts/summarize_unet_binary_seed_sweep.py \
+  --session-root outputs/unet_binary_multiseed_camus_top3/20260702_120000
+```
