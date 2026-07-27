@@ -55,9 +55,11 @@ def apply_wavelet_denoise(image: np.ndarray, wavelet_name: str = "haar", level: 
     detail_arr = np.concatenate([c.ravel() for c in detail_coeffs])
     sigma_hat = np.median(np.abs(detail_arr)) / 0.6745 if detail_arr.size else 0.0
     threshold = sigma_hat * np.sqrt(2.0 * np.log(image.size + 1))
+
     new_coeffs = [coeffs[0]]
     for detail in coeffs[1:]:
         new_coeffs.append(tuple(_soft_threshold(c, threshold) for c in detail))
+
     reconstructed = pywt.waverec2(new_coeffs, wavelet=wavelet_name)
     reconstructed = reconstructed[: image.shape[0], : image.shape[1]]
     return ensure_float01(reconstructed)
@@ -69,7 +71,15 @@ def apply_nlm(image: np.ndarray, h: float | None = None, patch_size: int = 5, pa
         return image.astype(np.float32, copy=True)
     sigma = float(np.mean(estimate_sigma(image, channel_axis=None)))
     h_value = h if h is not None else max(0.8 * sigma, 0.01)
-    out = denoise_nl_means(image, h=h_value, patch_size=patch_size, patch_distance=patch_distance, fast_mode=True, channel_axis=None, preserve_range=True)
+    out = denoise_nl_means(
+        image,
+        h=h_value,
+        patch_size=patch_size,
+        patch_distance=patch_distance,
+        fast_mode=True,
+        channel_axis=None,
+        preserve_range=True,
+    )
     return ensure_float01(out)
 
 
@@ -81,6 +91,7 @@ def apply_clahe(image: np.ndarray, clip_limit: float = 0.03, kernel_size: int = 
 def preprocess_image(image: np.ndarray, mode: PreprocessMode, params: PreprocessParams | None = None) -> np.ndarray:
     params = params or PreprocessParams()
     x = normalize_minmax(image)
+
     if mode == "none":
         return x
     if mode == "gaussian":
