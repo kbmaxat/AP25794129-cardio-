@@ -1,20 +1,20 @@
 # AP25794129 Cardio Project
 
-Репозиторий содержит две версии проекта:
+This repository contains two versions of the project:
 
-- `ap25794129-cardio-preprocessing` — **основная версия проекта**.
-- `for_editor_blinded_review/cardiac-preprocessing-benchmark` — **анонимизированный клон для редактора и рецензентов** (blinded review package).
+- `ap25794129-cardio-preprocessing` — **main project version**.
+- `for_editor_blinded_review/cardiac-preprocessing-benchmark` — **an anonymized clone for editor/reviewer download** (blinded review package).
 
-## Статус статьи
+## Manuscript Status
 
-Статья подана в журнал **Radiology Advances**.
+The manuscript has been submitted to **Radiology Advances**.
 
 - **Manuscript ID:** `RADADV-2026-179`
 
-## Авторы и роли
+## Authors and Roles
 
-- **Maxat Kabdullin** — PhD candidate in Information Systems, Department of Information Systems, Satbayev University, Almaty, Kazakhstan. Research interests: deep learning, medical image analysis, cardiovascular imaging workflows, and translational evaluation of AI systems in radiology and cardiology. Также является **руководителем данного проекта**.
+- **Maxat Kabdullin** — PhD candidate in Information Systems, Department of Information Systems, Satbayev University, Almaty, Kazakhstan. Research interests include deep learning, medical image analysis, cardiovascular imaging workflows, and translational evaluation of artificial intelligence systems in radiology and cardiology. He is also the **project lead**.
 
-- **Azat Kabdullin** — PhD candidate in Information Systems, Department of Information Systems, Satbayev University, Almaty, Kazakhstan. Research interests: information systems, applied artificial intelligence, and biomedical data analysis.
+- **Azat Kabdullin** — PhD candidate in Information Systems, Department of Information Systems, Satbayev University, Almaty, Kazakhstan. Research interests include information systems, applied artificial intelligence, and biomedical data analysis.
 
-- **Lyazat Naizabayeva** — Doctor of Technical Sciences, Professor-Researcher, Department of Information Systems, International Information Technology University (IITU), Almaty, Kazakhstan. Research interests: information systems and data analytics.
+- **Lyazat Naizabayeva** — Doctor of Technical Sciences, Professor-Researcher, Department of Information Systems, International Information Technology University (IITU), Almaty, Kazakhstan. Research interests include information systems and data analytics.
