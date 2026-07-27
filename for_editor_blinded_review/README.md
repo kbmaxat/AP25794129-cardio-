@@ -11,3 +11,4 @@ Notes:
 - No real patient data are included.
 - The package is research software (not a clinical diagnostic system).
 - The package content is prepared for editor/reviewer distribution.
+- Reported benchmark tables, where included, are transcribed from the submitted manuscript version; no post-hoc retraining or parameter tuning was performed to fit those values.
