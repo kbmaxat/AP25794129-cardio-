@@ -9,6 +9,7 @@ from cardiac_image_system.core.io import save_grayscale_image
 def main():
     out = Path("data/sample")
     out.mkdir(parents=True, exist_ok=True)
+
     rows = ["patient_id,phase,image_path,mask_path"]
     rng = np.random.default_rng(2026)
     for i in range(1, 4):
@@ -21,11 +22,13 @@ def main():
             mask[rr, cc] = True
             image[mask] += 0.5
             image = np.clip(image, 0, 1)
+
             image_path = out / f"P{i:03d}_{phase}.png"
             mask_path = out / f"P{i:03d}_{phase}_mask.png"
             save_grayscale_image(image_path, image)
             save_grayscale_image(mask_path, mask.astype("float32"))
             rows.append(f"P{i:03d},{phase},{image_path},{mask_path}")
+
     (out / "manifest.csv").write_text("\n".join(rows), encoding="utf-8")
     print("Synthetic sample created in data/sample")
 
