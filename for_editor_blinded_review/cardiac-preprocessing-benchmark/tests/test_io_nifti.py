@@ -11,6 +11,19 @@ def test_load_nifti_slice(tmp_path: Path):
     arr[:, :, 1] = 5.0
     path = tmp_path / "sample.nii.gz"
     nib.save(nib.Nifti1Image(arr, np.eye(4)), path)
+
     loaded = load_grayscale_image(path, slice_index=1)
     assert loaded.shape == (8, 8)
+    assert np.isfinite(loaded).all()
+    assert loaded.max() == 1.0
+
+
+def test_load_nifti_without_slice_uses_middle_slice(tmp_path: Path):
+    arr = np.zeros((6, 6, 5), dtype=np.float32)
+    arr[:, :, 2] = 3.0
+    path = tmp_path / "sample_middle.nii.gz"
+    nib.save(nib.Nifti1Image(arr, np.eye(4)), path)
+
+    loaded = load_grayscale_image(path)
+    assert loaded.shape == (6, 6)
     assert loaded.max() == 1.0
