@@ -23,7 +23,10 @@ class DoubleConv(nn.Module):
 class Down(nn.Module):
     def __init__(self, in_channels: int, out_channels: int) -> None:
         super().__init__()
-        self.block = nn.Sequential(nn.MaxPool2d(2), DoubleConv(in_channels, out_channels))
+        self.block = nn.Sequential(
+            nn.MaxPool2d(2),
+            DoubleConv(in_channels, out_channels),
+        )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.block(x)
@@ -40,7 +43,10 @@ class Up(nn.Module):
         diff_y = skip.size(2) - x.size(2)
         diff_x = skip.size(3) - x.size(3)
         if diff_y != 0 or diff_x != 0:
-            x = nn.functional.pad(x, [diff_x // 2, diff_x - diff_x // 2, diff_y // 2, diff_y - diff_y // 2])
+            x = nn.functional.pad(
+                x,
+                [diff_x // 2, diff_x - diff_x // 2, diff_y // 2, diff_y - diff_y // 2],
+            )
         x = torch.cat([skip, x], dim=1)
         return self.conv(x)
 
