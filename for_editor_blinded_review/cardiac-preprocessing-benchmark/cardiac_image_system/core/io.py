@@ -12,6 +12,7 @@ PathLike = Union[str, Path]
 
 
 def ensure_float01(image: np.ndarray) -> np.ndarray:
+    """Convert image-like array to float32 and scale to [0, 1] if needed."""
     arr = np.asarray(image, dtype=np.float32)
     if arr.ndim > 2:
         arr = arr[..., 0]
@@ -46,6 +47,7 @@ def _extract_nifti_slice(array: np.ndarray, slice_index: int | None = None) -> n
 
 
 def load_grayscale_image(path: PathLike, slice_index: int | None = None) -> np.ndarray:
+    """Load image as float32 grayscale array in range [0, 1]."""
     path = Path(path)
     if not path.exists():
         raise FileNotFoundError(f"Image not found: {path}")
@@ -65,6 +67,7 @@ def load_grayscale_image(path: PathLike, slice_index: int | None = None) -> np.n
 
 
 def load_label_image(path: PathLike, slice_index: int | None = None) -> np.ndarray:
+    """Load segmentation label image without intensity normalization."""
     path = Path(path)
     if not path.exists():
         raise FileNotFoundError(f"Label image not found: {path}")
@@ -86,6 +89,7 @@ def load_label_image(path: PathLike, slice_index: int | None = None) -> np.ndarr
 
 
 def save_grayscale_image(path: PathLike, image: np.ndarray) -> None:
+    """Save grayscale image after clipping to [0, 1]."""
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     arr = np.clip(image, 0.0, 1.0)
