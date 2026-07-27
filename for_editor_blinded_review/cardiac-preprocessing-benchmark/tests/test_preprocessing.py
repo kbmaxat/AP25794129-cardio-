@@ -9,3 +9,13 @@ def test_preprocess_modes_return_same_shape():
         out = preprocess_image(image, mode=mode)
         assert out.shape == image.shape
         assert np.isfinite(out).all()
+        assert out.min() >= 0.0
+        assert out.max() <= 1.0
+
+
+def test_constant_image_safe():
+    image = np.ones((32, 32), dtype="float32")
+    for mode in ["none", "wavelet", "hybrid"]:
+        out = preprocess_image(image, mode=mode)
+        assert out.shape == image.shape
+        assert np.isfinite(out).all()
