@@ -4,6 +4,12 @@ Source manuscript file: `RadiologyAI_Main_Manuscript_Submission.docx`.
 
 This document stores the finalized benchmark outcomes that were reported in the manuscript.
 
+## Provenance note
+
+- The numbers below are transcribed from the submitted manuscript tables.
+- These tables are archived here for reproducibility of the submitted version.
+- No post-hoc retraining or parameter tuning was performed to fit these reported values.
+
 ## Table 1. Dataset composition
 
 | Dataset Group | Modality | Patients | Effective Instances | Train Patients / Rows | Validation Patients / Rows | Test Patients / Rows |
