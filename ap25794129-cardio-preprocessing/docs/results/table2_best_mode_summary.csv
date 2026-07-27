@@ -1,0 +1,4 @@
+dataset_group,best_mode,dice,iou,hd95,inference_time_ms_per_image
+ACDC,none,0.9016,0.8386,8.5891,0.74
+CAMUS,wavelet,0.9210,0.8551,13.5043,0.46
+ACDC+CAMUS,none,0.8951,0.8155,13.5698,0.38
