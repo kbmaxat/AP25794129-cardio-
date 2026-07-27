@@ -8,7 +8,12 @@ def validate_patient_level_split(train: pd.DataFrame, val: pd.DataFrame, test: p
     train_ids = set(train["patient_id"].astype(str))
     val_ids = set(val["patient_id"].astype(str))
     test_ids = set(test["patient_id"].astype(str))
-    overlaps = {"train_val": train_ids & val_ids, "train_test": train_ids & test_ids, "val_test": val_ids & test_ids}
+
+    overlaps = {
+        "train_val": train_ids & val_ids,
+        "train_test": train_ids & test_ids,
+        "val_test": val_ids & test_ids,
+    }
     bad = {k: sorted(v) for k, v in overlaps.items() if v}
     if bad:
         raise ValueError(f"Patient-level leakage detected: {bad}")
