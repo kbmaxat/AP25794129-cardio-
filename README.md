@@ -1,5 +1,11 @@
 # AP25794129 Cardio Project
 
+## About
+
+Research project on cardiac image preprocessing and downstream evaluation for radiology/cardiology workflows.
+
+- Project website: https://maxatlab.kz/en/
+
 This repository contains two versions of the project:
 
 - `ap25794129-cardio-preprocessing` — **main project version**.
