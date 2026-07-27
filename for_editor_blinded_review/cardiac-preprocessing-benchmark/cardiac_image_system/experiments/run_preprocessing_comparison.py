@@ -21,6 +21,7 @@ def run_experiment(manifest_path: Path, output_dir: Path, modes: list[str]) -> p
     masks_dir = output_dir / "masks"
     processed_dir.mkdir(exist_ok=True)
     masks_dir.mkdir(exist_ok=True)
+
     rows = []
     for _, row in df.iterrows():
         patient_id = str(row["patient_id"])
@@ -28,16 +29,20 @@ def run_experiment(manifest_path: Path, output_dir: Path, modes: list[str]) -> p
         slice_index = None
         if "slice_index" in row and not pd.isna(row["slice_index"]):
             slice_index = int(row["slice_index"])
+
         image = load_grayscale_image(row["image_path"], slice_index=slice_index)
         mask_true = load_grayscale_image(row["mask_path"], slice_index=slice_index) > 0.5
+
         for mode in modes:
             processed = preprocess_image(image, mode=mode)
             mask_pred = otsu_proxy_segmentation(processed)
+
             stem = f"{patient_id}_{phase}_{mode}"
             processed_path = processed_dir / f"{stem}.png"
             mask_path = masks_dir / f"{stem}_mask.png"
             save_grayscale_image(processed_path, processed)
             save_grayscale_image(mask_path, mask_pred.astype(float))
+
             result_row = {
                 "patient_id": patient_id,
                 "phase": phase,
@@ -52,11 +57,25 @@ def run_experiment(manifest_path: Path, output_dir: Path, modes: list[str]) -> p
                 "hd95": hd95(mask_true, mask_pred),
                 "relative_area_error": relative_area_error(mask_true, mask_pred),
             }
+            for key in ["dataset", "subset", "modality", "view", "slice_index", "frame_id", "group", "source_patient_id"]:
+                if key in row.index:
+                    result_row[key] = row[key]
             rows.append(result_row)
+
     results = pd.DataFrame(rows)
     results.to_csv(output_dir / "metrics_slice_level.csv", index=False)
-    aggregate_patient_level(results).to_csv(output_dir / "metrics_patient_level.csv", index=False)
-    save_runtime_log(output_dir, {"timestamp": datetime.now().isoformat(), "manifest": str(manifest_path), "modes": ",".join(modes), **summarize_manifest(df)})
+    patient_results = aggregate_patient_level(results)
+    patient_results.to_csv(output_dir / "metrics_patient_level.csv", index=False)
+
+    save_runtime_log(
+        output_dir,
+        {
+            "timestamp": datetime.now().isoformat(),
+            "manifest": str(manifest_path),
+            "modes": ",".join(modes),
+            **summarize_manifest(df),
+        },
+    )
     return results
 
 
