@@ -1,0 +1,9 @@
+[project]
+name = "ap25794129-cardio-preprocessing"
+version = "0.1.0"
+description = "Research prototype for cardiovascular biomedical image preprocessing and validation."
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
