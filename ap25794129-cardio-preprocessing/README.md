@@ -6,6 +6,10 @@ This repository supports the technical implementation of the PhD/grant project:
 
 **AP25794129 — Development of an algorithm for filtering and preprocessing biomedical images for cardiological diagnostics**
 
+## Project website
+
+- https://maxatlab.kz/en/
+
 ## Important scope
 
 This is a **research prototype**, not a certified medical diagnostic system.
