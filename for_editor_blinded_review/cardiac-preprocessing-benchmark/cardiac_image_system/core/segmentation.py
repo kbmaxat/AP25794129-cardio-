@@ -12,6 +12,7 @@ def _remove_small_components(mask: np.ndarray, min_object_size: int) -> np.ndarr
     labeled, num_labels = label(mask.astype(bool))
     if num_labels == 0:
         return mask.astype(bool)
+
     counts = np.bincount(labeled.ravel())
     keep = np.zeros_like(counts, dtype=bool)
     keep[0] = False
@@ -20,9 +21,14 @@ def _remove_small_components(mask: np.ndarray, min_object_size: int) -> np.ndarr
 
 
 def otsu_proxy_segmentation(image: np.ndarray, min_object_size: int = 64, morphology_radius: int = 2) -> np.ndarray:
+    """Deterministic Otsu + morphology proxy segmentation.
+
+    This is not a clinical segmentation method.
+    """
     arr = np.asarray(image, dtype=np.float32)
     if arr.max() <= arr.min():
         return np.zeros_like(arr, dtype=bool)
+
     threshold = threshold_otsu(arr)
     mask = arr > threshold
     mask = _remove_small_components(mask, min_object_size=min_object_size)
