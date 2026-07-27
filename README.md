@@ -17,6 +17,12 @@ The manuscript has been submitted to **Radiology Advances**.
 
 - **Manuscript ID:** `RADADV-2026-179`
 
+## Results Provenance and Integrity
+
+- The values in `ap25794129-cardio-preprocessing/docs/final_results_radiology_ai.md` and related CSV tables are transcribed from the submitted manuscript tables.
+- These result tables were added for transparency and reproducibility of the submitted version.
+- No post-hoc model retraining or parameter tuning was performed to match these reported values.
+
 ## Authors and Roles
 
 - **Maxat Kabdullin** — PhD candidate in Information Systems, Department of Information Systems, Satbayev University, Almaty, Kazakhstan. Research interests include deep learning, medical image analysis, cardiovascular imaging workflows, and translational evaluation of artificial intelligence systems in radiology and cardiology. He is also the **project lead**.
