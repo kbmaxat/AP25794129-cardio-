@@ -69,6 +69,9 @@ ap25794129-cardio-preprocessing/
 
 ## Quick start
 
+Tested with Python 3.12. `requirements.txt` pins exact versions that are verified to install
+and pass the full test suite together.
+
 ```bash
 python -m venv .venv
 source .venv/bin/activate
@@ -206,6 +209,30 @@ Summarize a completed multi-seed session:
 python scripts/summarize_unet_binary_seed_sweep.py \
   --session-root outputs/unet_binary_multiseed_camus_top3/20260702_120000
 ```
+
+## Statistical comparison across preprocessing modes
+
+`cardiac_image_system/core/stats.py` implements the paired-comparison statistics
+(bootstrap confidence intervals, Holm-adjusted Wilcoxon signed-rank tests, and TOST
+equivalence testing) as version-controlled, unit-tested code, rather than as numbers
+transcribed by hand. Given a `test_patient_level.csv` per mode (produced by
+`train_unet_baseline` / `train_unet_multiclass`), it reproduces a table3-style
+mode-vs-baseline comparison:
+
+```bash
+python scripts/compare_preprocessing_modes.py \
+  --run none=outputs/unet_baseline_combined_none \
+  --run wavelet=outputs/unet_baseline_combined_wavelet \
+  --run nlm=outputs/unet_baseline_combined_nlm \
+  --baseline-mode none \
+  --metric dice \
+  --output-csv outputs/mode_comparison_dice.csv
+```
+
+The TOST (two one-sided tests) check reports whether a mode is statistically equivalent
+to the baseline within a chosen margin — this is the appropriate test for a "preprocessing
+does not help" claim, since a non-significant Wilcoxon/Holm result on its own only means
+failure to reject the null, not proof of equivalence.
 
 ## Final manuscript results (RadiologyAI submission)
 
