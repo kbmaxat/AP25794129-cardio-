@@ -12,3 +12,4 @@ Notes:
 - The package is research software (not a clinical diagnostic system).
 - The package content is prepared for editor/reviewer distribution.
 - Reported benchmark tables, where included, are transcribed from the submitted manuscript version; no post-hoc retraining or parameter tuning was performed to fit those values.
+- This package was originally prepared for the blinded review process at Radiology Advances (Manuscript ID `RADADV-2026-179`, not accepted; see root `README.md`). It is kept here for provenance and can be reused or updated if a future submission requires an anonymized review package.
