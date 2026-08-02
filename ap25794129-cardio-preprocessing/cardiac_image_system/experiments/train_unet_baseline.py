@@ -21,11 +21,14 @@ from cardiac_image_system.core.metrics import dice, hd95, iou
 from cardiac_image_system.core.splits import export_split_manifests, make_patient_level_random_split, split_by_subset_column
 from cardiac_image_system.core.torch_data import ManifestSegmentationDataset
 from cardiac_image_system.core.validation import aggregate_patient_level, save_runtime_log, validate_patient_level_split
-from cardiac_image_system.models import UNet2D
+from cardiac_image_system.models import AttentionUNet2D, UNet2D
+
+ARCHITECTURES = {"unet": UNet2D, "attention_unet": AttentionUNet2D}
 
 
 @dataclass(frozen=True)
 class TrainConfig:
+    architecture: str = "unet"
     preprocess_mode: str = "none"
     image_height: int = 256
     image_width: int = 256
@@ -216,6 +219,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--manifest", required=True, type=Path)
     parser.add_argument("--output-dir", required=True, type=Path)
+    parser.add_argument("--architecture", choices=sorted(ARCHITECTURES), default="unet")
     parser.add_argument("--mode", default="none")
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--batch-size", type=int, default=8)
@@ -239,6 +243,7 @@ def main() -> None:
     args = parser.parse_args()
 
     config = TrainConfig(
+        architecture=args.architecture,
         preprocess_mode=args.mode,
         image_height=args.image_height,
         image_width=args.image_width,
@@ -281,11 +286,11 @@ def main() -> None:
     test_loader = build_dataloader(split_map["test"], config=config, augment=False, shuffle=False)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = UNet2D().to(device)
+    model = ARCHITECTURES[config.architecture]().to(device)
     optimizer = AdamW(model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay)
     scheduler = CosineAnnealingLR(optimizer, T_max=max(config.epochs, 2))
 
-    log(f"Starting baseline run: mode={config.preprocess_mode}, output_dir={output_dir}")
+    log(f"Starting baseline run: architecture={config.architecture}, mode={config.preprocess_mode}, output_dir={output_dir}")
     log(
         "Split summary: "
         f"train={len(split_map['train'])} rows/{split_map['train']['patient_id'].nunique()} patients, "
