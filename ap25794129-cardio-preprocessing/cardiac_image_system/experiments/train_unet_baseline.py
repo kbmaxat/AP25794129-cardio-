@@ -18,12 +18,13 @@ from torch.utils.data import DataLoader
 
 from cardiac_image_system.core.manifest import load_manifest, summarize_manifest
 from cardiac_image_system.core.metrics import dice, hd95, iou
+from cardiac_image_system.core.preprocessing import PreprocessParams
 from cardiac_image_system.core.splits import export_split_manifests, make_patient_level_random_split, split_by_subset_column
 from cardiac_image_system.core.torch_data import ManifestSegmentationDataset
 from cardiac_image_system.core.validation import aggregate_patient_level, save_runtime_log, validate_patient_level_split
-from cardiac_image_system.models import AttentionUNet2D, UNet2D
+from cardiac_image_system.models import AttentionUNet2D, TransUNet2D, UNet2D
 
-ARCHITECTURES = {"unet": UNet2D, "attention_unet": AttentionUNet2D}
+ARCHITECTURES = {"unet": UNet2D, "attention_unet": AttentionUNet2D, "transunet": TransUNet2D}
 
 
 @dataclass(frozen=True)
@@ -49,6 +50,16 @@ class TrainConfig:
     early_stopping_patience: int = 0
     early_stopping_min_epochs: int = 0
     early_stopping_min_delta: float = 0.0
+    wavelet_level: int = 2
+    nlm_h_multiplier: float = 0.8
+    clahe_clip_limit: float = 0.03
+
+    def preprocess_params(self) -> PreprocessParams:
+        return PreprocessParams(
+            wavelet_level=self.wavelet_level,
+            nlm_h_multiplier=self.nlm_h_multiplier,
+            clahe_clip_limit=self.clahe_clip_limit,
+        )
 
 
 def set_seed(seed: int) -> None:
@@ -120,6 +131,7 @@ def build_dataloader(
         manifest=manifest,
         image_size=(config.image_height, config.image_width),
         preprocess_mode=config.preprocess_mode,
+        preprocess_params=config.preprocess_params(),
         augment=augment,
         seed=config.seed,
     )
@@ -240,6 +252,9 @@ def main() -> None:
     parser.add_argument("--early-stopping-patience", type=int, default=0)
     parser.add_argument("--early-stopping-min-epochs", type=int, default=0)
     parser.add_argument("--early-stopping-min-delta", type=float, default=0.0)
+    parser.add_argument("--wavelet-level", type=int, default=2)
+    parser.add_argument("--nlm-h-multiplier", type=float, default=0.8)
+    parser.add_argument("--clahe-clip-limit", type=float, default=0.03)
     args = parser.parse_args()
 
     config = TrainConfig(
@@ -264,6 +279,9 @@ def main() -> None:
         early_stopping_patience=args.early_stopping_patience,
         early_stopping_min_epochs=args.early_stopping_min_epochs,
         early_stopping_min_delta=args.early_stopping_min_delta,
+        wavelet_level=args.wavelet_level,
+        nlm_h_multiplier=args.nlm_h_multiplier,
+        clahe_clip_limit=args.clahe_clip_limit,
     )
 
     set_seed(config.seed)

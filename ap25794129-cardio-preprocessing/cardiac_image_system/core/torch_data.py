@@ -11,7 +11,7 @@ from skimage.transform import resize
 from torch.utils.data import Dataset
 
 from cardiac_image_system.core.io import load_grayscale_image, load_label_image
-from cardiac_image_system.core.preprocessing import PreprocessMode, preprocess_image
+from cardiac_image_system.core.preprocessing import PreprocessMode, PreprocessParams, preprocess_image
 
 
 @dataclass(frozen=True)
@@ -124,6 +124,7 @@ class ManifestSegmentationDataset(Dataset):
         manifest: pd.DataFrame,
         image_size: tuple[int, int] = (256, 256),
         preprocess_mode: PreprocessMode = "none",
+        preprocess_params: PreprocessParams | None = None,
         augment: bool = False,
         seed: int = 42,
         label_mode: LabelMode = "binary",
@@ -134,6 +135,7 @@ class ManifestSegmentationDataset(Dataset):
         self.manifest = manifest.reset_index(drop=True).copy()
         self.image_size = tuple(int(x) for x in image_size)
         self.preprocess_mode = preprocess_mode
+        self.preprocess_params = preprocess_params
         self.augment = augment
         self.seed = int(seed)
         self.label_mode = label_mode
@@ -151,7 +153,7 @@ class ManifestSegmentationDataset(Dataset):
         image = load_grayscale_image(row["image_path"], slice_index=slice_index)
         raw_mask = load_label_image(row["mask_path"], slice_index=slice_index)
 
-        image = preprocess_image(image, mode=self.preprocess_mode)
+        image = preprocess_image(image, mode=self.preprocess_mode, params=self.preprocess_params)
         if self.label_mode == "binary":
             mask = (np.asarray(raw_mask, dtype=np.float32) > 0.0).astype(np.float32)
             image, mask = resize_pair(image, mask, target_size=self.image_size)

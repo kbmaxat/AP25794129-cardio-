@@ -20,6 +20,7 @@ class PreprocessParams:
     wavelet_name: str = "haar"
     wavelet_level: int = 2
     nlm_h: float | None = None
+    nlm_h_multiplier: float = 0.8
     nlm_patch_size: int = 5
     nlm_patch_distance: int = 6
     clahe_clip_limit: float = 0.03
@@ -65,12 +66,18 @@ def apply_wavelet_denoise(image: np.ndarray, wavelet_name: str = "haar", level: 
     return ensure_float01(reconstructed)
 
 
-def apply_nlm(image: np.ndarray, h: float | None = None, patch_size: int = 5, patch_distance: int = 6) -> np.ndarray:
+def apply_nlm(
+    image: np.ndarray,
+    h: float | None = None,
+    patch_size: int = 5,
+    patch_distance: int = 6,
+    h_sigma_multiplier: float = 0.8,
+) -> np.ndarray:
     image = ensure_float01(image)
     if float(np.std(image)) <= 1e-8:
         return image.astype(np.float32, copy=True)
     sigma = float(np.mean(estimate_sigma(image, channel_axis=None)))
-    h_value = h if h is not None else max(0.8 * sigma, 0.01)
+    h_value = h if h is not None else max(h_sigma_multiplier * sigma, 0.01)
     out = denoise_nl_means(
         image,
         h=h_value,
@@ -99,12 +106,12 @@ def preprocess_image(image: np.ndarray, mode: PreprocessMode, params: Preprocess
     if mode == "wavelet":
         return apply_wavelet_denoise(x, params.wavelet_name, params.wavelet_level)
     if mode == "nlm":
-        return apply_nlm(x, params.nlm_h, params.nlm_patch_size, params.nlm_patch_distance)
+        return apply_nlm(x, params.nlm_h, params.nlm_patch_size, params.nlm_patch_distance, params.nlm_h_multiplier)
     if mode == "clahe":
         return apply_clahe(x, params.clahe_clip_limit, params.clahe_kernel_size)
     if mode == "hybrid":
         x = apply_wavelet_denoise(x, params.wavelet_name, params.wavelet_level)
-        x = apply_nlm(x, params.nlm_h, params.nlm_patch_size, params.nlm_patch_distance)
+        x = apply_nlm(x, params.nlm_h, params.nlm_patch_size, params.nlm_patch_distance, params.nlm_h_multiplier)
         x = apply_clahe(x, params.clahe_clip_limit, params.clahe_kernel_size)
         return x
     raise ValueError(f"Unknown preprocessing mode: {mode}")
