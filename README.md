@@ -2,14 +2,11 @@
 
 ## About
 
-Research project on cardiac image preprocessing and downstream evaluation for radiology/cardiology workflows.
+This repository contains a cardiac image preprocessing research project and benchmark materials for radiology/cardiology AI workflows.
 
+- `ap25794129-cardio-preprocessing` — main project code, experiments, documentation, and tests.
+- `for_editor_blinded_review/cardiac-preprocessing-benchmark` — anonymized blinded-review package for editors/reviewers.
 - Project website: https://maxatlab.kz/en/
-
-This repository contains two versions of the project:
-
-- `ap25794129-cardio-preprocessing` — **main project version**.
-- `for_editor_blinded_review/cardiac-preprocessing-benchmark` — **an anonymized clone for editor/reviewer download** (blinded review package).
 
 ## Manuscript Status
 
