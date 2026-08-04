@@ -1,6 +1,6 @@
-# Final Results (RadiologyAI Main Manuscript Submission)
+# Final Results (Computerized Medical Imaging and Graphics Submission)
 
-Source manuscript file: `RadiologyAI_Main_Manuscript_Submission.docx`.
+Source manuscript file: current Computerized Medical Imaging and Graphics submission draft.
 
 This document stores the finalized benchmark outcomes that were reported in the manuscript.
 

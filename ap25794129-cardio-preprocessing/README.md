@@ -207,11 +207,11 @@ python scripts/summarize_unet_binary_seed_sweep.py \
   --session-root outputs/unet_binary_multiseed_camus_top3/20260702_120000
 ```
 
-## Final manuscript results (RadiologyAI submission)
+## Final manuscript results (CMIG submission)
 
-The finalized benchmark results extracted from `RadiologyAI_Main_Manuscript_Submission.docx` are available here:
+The finalized benchmark results extracted from the current manuscript submission are available here:
 
-- `docs/final_results_radiology_ai.md`
+- `docs/final_results_cmig.md`
 - `docs/results/table2_best_mode_summary.csv`
 - `docs/results/table3_dice_vs_none_inference.csv`
 - `docs/results/table4_acdc_multiclass_top3.csv`

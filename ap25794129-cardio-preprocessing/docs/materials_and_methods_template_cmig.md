@@ -1,6 +1,6 @@
 # Materials and Methods Template for the Cardiac Segmentation Benchmark
 
-This template is aligned with the pipeline currently implemented in the repository as of July 1, 2026. It can be adapted for submission to *Radiology: Artificial Intelligence* after the final experimental runs are complete and the reported metrics are replaced with the actual results.
+This template is aligned with the pipeline currently implemented in the repository as of July 1, 2026. It can be adapted for submission to *Computerized Medical Imaging and Graphics* after the final experimental runs are complete and the reported metrics are replaced with the actual results.
 
 ## 1. Study Design
 

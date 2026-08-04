@@ -17,7 +17,7 @@ This repository contains two versions of the project:
 
 ## Results Provenance and Integrity
 
-- The values in `ap25794129-cardio-preprocessing/docs/final_results_radiology_ai.md` and related CSV tables are transcribed from the current manuscript submission tables.
+- The values in `ap25794129-cardio-preprocessing/docs/final_results_cmig.md` and related CSV tables are transcribed from the current manuscript submission tables.
 - These result tables were added for transparency and reproducibility of that submitted version.
 - No post-hoc model retraining or parameter tuning was performed to match these reported values.
 
