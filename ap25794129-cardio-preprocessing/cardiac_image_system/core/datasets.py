@@ -7,6 +7,8 @@ import nibabel as nib
 import numpy as np
 import pandas as pd
 
+from cardiac_image_system.core.io import get_nifti_in_plane_spacing
+
 FRAME_PATTERN = re.compile(r"_frame(\d+)\.nii(?:\.gz)?$", re.IGNORECASE)
 
 
@@ -50,7 +52,11 @@ def _phase_from_frame(frame_id: int, info: dict[str, str | int | float]) -> str:
     return f"frame_{frame_id:02d}"
 
 
-def build_acdc_manifest(dataset_root: str | Path, subsets: tuple[str, ...] = ("training", "testing"), include_empty_masks: bool = False) -> pd.DataFrame:
+def build_acdc_manifest(
+    dataset_root: str | Path,
+    subsets: tuple[str, ...] = ("training", "testing"),
+    include_empty_masks: bool = False,
+) -> pd.DataFrame:
     dataset_root = Path(dataset_root)
     rows: list[dict] = []
 
@@ -66,7 +72,9 @@ def build_acdc_manifest(dataset_root: str | Path, subsets: tuple[str, ...] = ("t
             source_patient_id = patient_dir.name
             patient_id = f"ACDC_{source_patient_id}"
 
-            image_paths = sorted(p for p in patient_dir.glob("*_frame*.nii.gz") if not p.name.endswith("_gt.nii.gz"))
+            image_paths = sorted(
+                p for p in patient_dir.glob("*_frame*.nii.gz") if not p.name.endswith("_gt.nii.gz")
+            )
             for image_path in image_paths:
                 match = FRAME_PATTERN.search(image_path.name)
                 if not match:
@@ -84,6 +92,10 @@ def build_acdc_manifest(dataset_root: str | Path, subsets: tuple[str, ...] = ("t
                     mask_slices = [mask_array[:, :, i] for i in range(mask_array.shape[2])]
                 else:
                     raise ValueError(f"Unsupported ACDC mask dimensionality: {mask_array.shape} at {mask_path}")
+
+                spacing = get_nifti_in_plane_spacing(image_path)
+                spacing_row_mm = spacing[0] if spacing else None
+                spacing_col_mm = spacing[1] if spacing else None
 
                 phase = _phase_from_frame(frame_id, info)
                 for slice_index, mask_slice in enumerate(mask_slices):
@@ -105,6 +117,8 @@ def build_acdc_manifest(dataset_root: str | Path, subsets: tuple[str, ...] = ("t
                             "frame_id": frame_id,
                             "group": info.get("Group", "unknown"),
                             "has_positive_mask": has_positive,
+                            "spacing_row_mm": spacing_row_mm,
+                            "spacing_col_mm": spacing_col_mm,
                         }
                     )
 
@@ -134,7 +148,10 @@ def _load_patient_split_map(split_dir: Path) -> dict[str, str]:
     return mapping
 
 
-def build_camus_manifest(dataset_root: str | Path, include_half_sequences: bool = False) -> pd.DataFrame:
+def build_camus_manifest(
+    dataset_root: str | Path,
+    include_half_sequences: bool = False,
+) -> pd.DataFrame:
     dataset_root = Path(dataset_root)
     nifti_root = dataset_root / "database_nifti"
     split_root = dataset_root / "database_split"
@@ -151,6 +168,7 @@ def build_camus_manifest(dataset_root: str | Path, include_half_sequences: bool 
                 image_path = patient_dir / f"{source_patient_id}_{view}_{phase_code}.nii.gz"
                 mask_path = patient_dir / f"{source_patient_id}_{view}_{phase_code}_gt.nii.gz"
                 if image_path.exists() and mask_path.exists():
+                    spacing = get_nifti_in_plane_spacing(image_path)
                     rows.append(
                         {
                             "patient_id": patient_id,
@@ -166,6 +184,8 @@ def build_camus_manifest(dataset_root: str | Path, include_half_sequences: bool 
                             "frame_id": phase_code,
                             "group": "public",
                             "has_positive_mask": True,
+                            "spacing_row_mm": spacing[0] if spacing else None,
+                            "spacing_col_mm": spacing[1] if spacing else None,
                         }
                     )
 
@@ -173,6 +193,7 @@ def build_camus_manifest(dataset_root: str | Path, include_half_sequences: bool 
                 image_path = patient_dir / f"{source_patient_id}_{view}_half_sequence.nii.gz"
                 mask_path = patient_dir / f"{source_patient_id}_{view}_half_sequence_gt.nii.gz"
                 if image_path.exists() and mask_path.exists():
+                    spacing = get_nifti_in_plane_spacing(image_path)
                     rows.append(
                         {
                             "patient_id": patient_id,
@@ -188,6 +209,8 @@ def build_camus_manifest(dataset_root: str | Path, include_half_sequences: bool 
                             "frame_id": "half_sequence",
                             "group": "public",
                             "has_positive_mask": True,
+                            "spacing_row_mm": spacing[0] if spacing else None,
+                            "spacing_col_mm": spacing[1] if spacing else None,
                         }
                     )
 

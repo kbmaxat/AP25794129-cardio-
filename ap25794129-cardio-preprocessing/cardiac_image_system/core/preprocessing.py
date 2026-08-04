@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Literal
 
 import numpy as np
@@ -25,6 +25,63 @@ class PreprocessParams:
     nlm_patch_distance: int = 6
     clahe_clip_limit: float = 0.03
     clahe_kernel_size: int = 16
+
+
+@dataclass(frozen=True)
+class MmSpaceFilterTargets:
+    """Physical-scale (millimeter) targets for the pixel-space filter parameters in
+    ``PreprocessParams`` that represent a spatial extent (kernel/patch/window size).
+
+    The primary benchmark parameterizes these filters in pixels, applied at each image's native
+    resolution; because ACDC and CAMUS (and different patients within ACDC) differ in native pixel
+    spacing, a fixed pixel-space parameter corresponds to a different physical filter strength for
+    different patients. Setting an mm target here and converting it per-image via
+    ``resolve_mm_space_params`` holds the physical filter strength constant across patients
+    instead. Fields left as ``None`` fall back to the corresponding pixel-space default in the
+    base ``PreprocessParams`` unchanged (not converted).
+    """
+
+    gaussian_sigma_mm: float | None = None
+    nlm_patch_size_mm: float | None = None
+    nlm_patch_distance_mm: float | None = None
+    clahe_kernel_size_mm: float | None = None
+
+
+def resolve_mm_space_params(
+    base_params: PreprocessParams,
+    targets: MmSpaceFilterTargets,
+    spacing_mm: tuple[float, float] | None,
+) -> PreprocessParams:
+    """Return a ``PreprocessParams`` with mm-space ``targets`` converted to pixels for this image.
+
+    Anisotropic in-plane spacing (``spacing_mm`` may have unequal row/column components) is
+    reduced to a single isotropic mm-per-pixel scale via the mean of the two axes, since the
+    filters this project implements (Gaussian sigma, NLM patch/search windows, CLAHE tile size)
+    are themselves isotropic pixel-space parameters, not directionally aware. When ``spacing_mm``
+    is ``None`` (spacing unavailable for this image), ``base_params`` is returned unchanged --
+    mm-space conversion silently does nothing rather than raising, since spacing is not available
+    for every source in this pipeline.
+    """
+    if spacing_mm is None:
+        return base_params
+
+    mm_per_pixel = (spacing_mm[0] + spacing_mm[1]) / 2.0
+    if mm_per_pixel <= 0:
+        return base_params
+
+    updates: dict[str, float | int] = {}
+    if targets.gaussian_sigma_mm is not None:
+        updates["gaussian_sigma"] = targets.gaussian_sigma_mm / mm_per_pixel
+    if targets.nlm_patch_size_mm is not None:
+        updates["nlm_patch_size"] = max(1, round(targets.nlm_patch_size_mm / mm_per_pixel))
+    if targets.nlm_patch_distance_mm is not None:
+        updates["nlm_patch_distance"] = max(1, round(targets.nlm_patch_distance_mm / mm_per_pixel))
+    if targets.clahe_kernel_size_mm is not None:
+        updates["clahe_kernel_size"] = max(1, round(targets.clahe_kernel_size_mm / mm_per_pixel))
+
+    if not updates:
+        return base_params
+    return replace(base_params, **updates)
 
 
 def normalize_minmax(image: np.ndarray, eps: float = 1e-8) -> np.ndarray:

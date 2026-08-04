@@ -1,6 +1,11 @@
 import numpy as np
 
-from cardiac_image_system.core.preprocessing import PreprocessParams, preprocess_image
+from cardiac_image_system.core.preprocessing import (
+    MmSpaceFilterTargets,
+    PreprocessParams,
+    preprocess_image,
+    resolve_mm_space_params,
+)
 
 
 def test_wavelet_level_is_configurable_and_changes_output():
@@ -43,3 +48,34 @@ def test_constant_image_safe():
         out = preprocess_image(image, mode=mode)
         assert out.shape == image.shape
         assert np.isfinite(out).all()
+
+
+def test_resolve_mm_space_params_converts_using_mean_isotropic_spacing():
+    base = PreprocessParams(gaussian_sigma=1.0, nlm_patch_size=5, nlm_patch_distance=6, clahe_kernel_size=16)
+    targets = MmSpaceFilterTargets(gaussian_sigma_mm=2.0, nlm_patch_size_mm=5.0)
+    # mean spacing = (1.0 + 3.0) / 2 = 2.0 mm/pixel
+    resolved = resolve_mm_space_params(base, targets, spacing_mm=(1.0, 3.0))
+    assert resolved.gaussian_sigma == 1.0  # 2.0mm / 2.0mm-per-px = 1.0px
+    assert resolved.nlm_patch_size == round(5.0 / 2.0)
+    # unset targets fall back to the base pixel-space value unchanged
+    assert resolved.nlm_patch_distance == base.nlm_patch_distance
+    assert resolved.clahe_kernel_size == base.clahe_kernel_size
+
+
+def test_resolve_mm_space_params_returns_base_unchanged_without_spacing():
+    base = PreprocessParams(gaussian_sigma=1.0)
+    targets = MmSpaceFilterTargets(gaussian_sigma_mm=2.0)
+    resolved = resolve_mm_space_params(base, targets, spacing_mm=None)
+    assert resolved is base
+
+
+def test_resolve_mm_space_params_holds_physical_strength_constant_across_patients():
+    base = PreprocessParams(gaussian_sigma=1.0)
+    targets = MmSpaceFilterTargets(gaussian_sigma_mm=3.0)
+    # two "patients" with different native pixel spacing should get different pixel-space sigma
+    # values that represent the *same* 3.0mm physical blur radius
+    fine_spacing_patient = resolve_mm_space_params(base, targets, spacing_mm=(1.0, 1.0))
+    coarse_spacing_patient = resolve_mm_space_params(base, targets, spacing_mm=(2.0, 2.0))
+    assert fine_spacing_patient.gaussian_sigma == 3.0
+    assert coarse_spacing_patient.gaussian_sigma == 1.5
+    assert fine_spacing_patient.gaussian_sigma != coarse_spacing_patient.gaussian_sigma

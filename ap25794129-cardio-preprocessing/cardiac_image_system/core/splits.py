@@ -21,6 +21,52 @@ def split_by_subset_column(df: pd.DataFrame, subset_col: str = "subset") -> dict
     return {"train": train, "val": val, "test": test}
 
 
+def split_by_subset_column_carving_validation(
+    df: pd.DataFrame,
+    val_ratio: float = 0.15,
+    validation_seed: int = 42,
+    stratify_by: list[str] | None = None,
+    subset_col: str = "subset",
+) -> dict[str, pd.DataFrame]:
+    """Like ``split_by_subset_column``, but tolerates a manifest whose subset column has no
+    ``validation`` tag (e.g. ACDC's native training/testing-only labeling).
+
+    The ``test`` split is exactly the subset-tagged test patients and is therefore identical
+    across every caller regardless of the caller's own training seed. Validation is carved out
+    of the subset-tagged training patients using ``validation_seed``, a constant independent of
+    the training run's own seed, so that different training seeds see the same train/val/test
+    patient composition and differ only in model initialization and optimization, not in which
+    patients they are evaluated against. If the manifest already provides a non-empty
+    ``validation`` tag, this delegates to ``split_by_subset_column`` unchanged.
+    """
+    if subset_col not in df.columns:
+        raise ValueError(f"Column '{subset_col}' not found in manifest")
+
+    normalized = df[subset_col].astype(str).str.lower()
+    train_pool = df[normalized.isin(["training", "train"])].copy()
+    val = df[normalized.isin(["validation", "val"])].copy()
+    test = df[normalized.isin(["testing", "test"])].copy()
+
+    if not val.empty:
+        validate_patient_level_split(train_pool, val, test)
+        return {"train": train_pool, "val": val, "test": test}
+
+    if train_pool.empty or test.empty:
+        raise ValueError("Subset column must provide non-empty training and testing patients")
+
+    carved = make_patient_level_random_split(
+        train_pool,
+        train_ratio=1.0 - val_ratio,
+        val_ratio=val_ratio,
+        test_ratio=0.0,
+        seed=validation_seed,
+        stratify_by=stratify_by,
+    )
+    train, val = carved["train"], carved["val"]
+    validate_patient_level_split(train, val, test)
+    return {"train": train, "val": val, "test": test}
+
+
 def make_patient_level_random_split(
     df: pd.DataFrame,
     train_ratio: float = 0.7,

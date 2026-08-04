@@ -27,6 +27,41 @@ def aggregate_patient_level(results: pd.DataFrame) -> pd.DataFrame:
     return results.groupby(group_cols, as_index=False)[numeric_cols].mean()
 
 
+def aggregate_volumetric_level(results: pd.DataFrame) -> pd.DataFrame:
+    """Pool per-slice overlap counts into a genuine volumetric (3D) Dice/IoU per anatomical volume.
+
+    Groups by (patient_id, phase, view, mode) -- one group per reconstructed 3D volume (ACDC:
+    one short-axis stack per patient per cardiac phase; CAMUS: one 2D frame per patient, phase,
+    and view, so pooling is a no-op there) -- and sums each group's intersection/true-area/
+    pred-area pixel counts before computing a single ratio, rather than averaging per-slice
+    ratios. This is not the same statistic as ``aggregate_patient_level``'s mean-of-slice-Dice,
+    and is the statistically correct way to report a multi-slice volume's Dice/IoU.
+    """
+    from cardiac_image_system.core.metrics import dice_from_counts, iou_from_counts
+
+    required = {"patient_id", "intersection_pixels", "foreground_pixels_true", "foreground_pixels_pred"}
+    missing = required - set(results.columns)
+    if missing:
+        raise ValueError(f"aggregate_volumetric_level requires columns {sorted(missing)}")
+
+    group_cols = [col for col in ["patient_id", "phase", "view", "mode"] if col in results.columns]
+    pooled = results.groupby(group_cols, as_index=False).agg(
+        intersection_pixels=("intersection_pixels", "sum"),
+        foreground_pixels_true=("foreground_pixels_true", "sum"),
+        foreground_pixels_pred=("foreground_pixels_pred", "sum"),
+        n_slices=("patient_id", "size"),
+    )
+    pooled["dice_3d"] = pooled.apply(
+        lambda r: dice_from_counts(r["intersection_pixels"], r["foreground_pixels_true"], r["foreground_pixels_pred"]),
+        axis=1,
+    )
+    pooled["iou_3d"] = pooled.apply(
+        lambda r: iou_from_counts(r["intersection_pixels"], r["foreground_pixels_true"], r["foreground_pixels_pred"]),
+        axis=1,
+    )
+    return pooled
+
+
 def save_runtime_log(output_dir: str | Path, metadata: dict) -> None:
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
