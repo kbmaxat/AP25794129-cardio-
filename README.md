@@ -13,12 +13,11 @@ This repository contains two versions of the project:
 
 ## Manuscript Status
 
-- Submitted to **Radiology Advances** (Manuscript ID: `RADADV-2026-179`) — decision received 2026-07-31: not accepted. The editors' feedback centered on journal fit (the work suits an engineering/data-science readership better than Radiology Advances' primarily clinical audience); no methodological concerns were raised.
-- A revised submission to **Computerized Medical Imaging and Graphics** (Elsevier) is in preparation.
+- Submitted to **Computerized Medical Imaging and Graphics** (Elsevier).
 
 ## Results Provenance and Integrity
 
-- The values in `ap25794129-cardio-preprocessing/docs/final_results_radiology_ai.md` and related CSV tables are transcribed from the Radiology Advances submission tables.
+- The values in `ap25794129-cardio-preprocessing/docs/final_results_radiology_ai.md` and related CSV tables are transcribed from the current manuscript submission tables.
 - These result tables were added for transparency and reproducibility of that submitted version.
 - No post-hoc model retraining or parameter tuning was performed to match these reported values.
 
