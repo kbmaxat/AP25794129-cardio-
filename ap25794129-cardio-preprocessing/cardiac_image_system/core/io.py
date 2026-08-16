@@ -46,6 +46,22 @@ def _extract_nifti_slice(array: np.ndarray, slice_index: int | None = None) -> n
     raise ValueError(f"Unsupported NIfTI dimensionality for 2D loading: {arr.shape}")
 
 
+def get_nifti_in_plane_spacing(path: PathLike) -> tuple[float, float] | None:
+    """Return (row_mm, col_mm) in-plane voxel spacing from a NIfTI header, or None if unavailable.
+
+    Returns None for non-NIfTI inputs (PNG/NumPy sources carry no physical spacing metadata in
+    this pipeline) rather than raising, since spacing is an optional enrichment, not a required
+    field, for datasets or file formats that do not provide it.
+    """
+    path = Path(path)
+    if not path.exists() or not _is_nifti_path(path):
+        return None
+    zooms = nib.load(path).header.get_zooms()
+    if len(zooms) < 2:
+        return None
+    return (float(zooms[0]), float(zooms[1]))
+
+
 def load_grayscale_image(path: PathLike, slice_index: int | None = None) -> np.ndarray:
     """Load image as float32 grayscale array in range [0, 1]."""
     path = Path(path)
