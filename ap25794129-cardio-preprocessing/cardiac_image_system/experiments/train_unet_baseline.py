@@ -22,7 +22,6 @@ from cardiac_image_system.core.preprocessing import MmSpaceFilterTargets, Prepro
 from cardiac_image_system.core.splits import (
     export_split_manifests,
     make_patient_level_random_split,
-    split_by_subset_column,
     split_by_subset_column_carving_validation,
 )
 from cardiac_image_system.core.torch_data import ManifestSegmentationDataset
@@ -136,20 +135,22 @@ def resolve_split_map(manifest: pd.DataFrame, config: TrainConfig) -> dict[str, 
     df = apply_dataset_filter(manifest, config.dataset_filter)
     stratify_by = [col for col in ["dataset", "group", "view"] if col in df.columns]
 
+    # Always routed through the carving-aware splitter rather than split_by_subset_column
+    # directly: for a manifest spanning multiple datasets (e.g. pooled ACDC+CAMUS), a native
+    # validation tag supplied by only one dataset is not sufficient on its own -- see
+    # split_by_subset_column_carving_validation's per-dataset carving logic, which delegates to
+    # split_by_subset_column's exact behavior when every dataset present already has native
+    # validation coverage (or when there is only one dataset), and otherwise carves validation
+    # only for the datasets missing it.
     try:
-        subset_split = split_by_subset_column(df)
-        if not subset_split["train"].empty and not subset_split["val"].empty and not subset_split["test"].empty:
-            return subset_split
-    except ValueError:
-        pass
-
-    try:
-        return split_by_subset_column_carving_validation(
+        split_result = split_by_subset_column_carving_validation(
             df,
             val_ratio=config.val_ratio,
             validation_seed=config.validation_seed,
             stratify_by=stratify_by,
         )
+        if not split_result["train"].empty and not split_result["val"].empty and not split_result["test"].empty:
+            return split_result
     except ValueError:
         pass
 
