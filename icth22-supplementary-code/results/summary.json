@@ -1,0 +1,28 @@
+{
+  "augmentation_scope": "training split only",
+  "augmented_train_samples": 80,
+  "base_samples": 36,
+  "class_definition": {
+    "0": "background",
+    "1": "left ventricular cavity",
+    "2": "myocardium"
+  },
+  "expected_source_archive_md5": "8ff8a93358a77f1f29e34ae71b4ab281",
+  "expert_agreement": {
+    "cavity_dice": {
+      "max": 0.9579218503957536,
+      "mean": 0.9285552594721559,
+      "min": 0.8703874538745388,
+      "std": 0.02024302669272181
+    },
+    "myocardium_dice": {
+      "max": 0.9418021888104735,
+      "mean": 0.8696125883873524,
+      "min": 0.8004272743457361,
+      "std": 0.0323243304373571
+    }
+  },
+  "patients": 18,
+  "source_url": "https://www.laurentnajman.org/heart/H_data.html",
+  "total_npz_files": 116
+}

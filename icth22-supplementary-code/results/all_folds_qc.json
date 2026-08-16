@@ -1,0 +1,135 @@
+{
+  "copies_per_training_volume": 4,
+  "folds": [
+    {
+      "augmentation_and_qc_seconds": 2.59387645899551,
+      "augmented_pairs": 80,
+      "cavity_volume_ratio": {
+        "max": 1.006118881118881,
+        "mean": 1.0000307969184514,
+        "min": 0.996951044123569,
+        "sample_sd": 0.0013172681886942895
+      },
+      "fold": 0,
+      "myocardium_volume_ratio": {
+        "max": 1.003662205170685,
+        "mean": 1.0001040071975673,
+        "min": 0.99606245135296,
+        "sample_sd": 0.0014819973870444825
+      },
+      "qc_passed": 80,
+      "test_patients": 4,
+      "train_patients": 10,
+      "validation_patients": 4
+    },
+    {
+      "augmentation_and_qc_seconds": 2.744258999999147,
+      "augmented_pairs": 80,
+      "cavity_volume_ratio": {
+        "max": 1.0046263538888587,
+        "mean": 1.0000696642775144,
+        "min": 0.996951044123569,
+        "sample_sd": 0.001434229377485993
+      },
+      "fold": 1,
+      "myocardium_volume_ratio": {
+        "max": 1.003662205170685,
+        "mean": 1.0001024375007714,
+        "min": 0.99606245135296,
+        "sample_sd": 0.0017554682804584872
+      },
+      "qc_passed": 80,
+      "test_patients": 4,
+      "train_patients": 10,
+      "validation_patients": 4
+    },
+    {
+      "augmentation_and_qc_seconds": 3.018132750003133,
+      "augmented_pairs": 88,
+      "cavity_volume_ratio": {
+        "max": 1.0081650831353919,
+        "mean": 1.0002395181385992,
+        "min": 0.996951044123569,
+        "sample_sd": 0.0016816267990859138
+      },
+      "fold": 2,
+      "myocardium_volume_ratio": {
+        "max": 1.0047398713463491,
+        "mean": 1.000124274995189,
+        "min": 0.9965190404294582,
+        "sample_sd": 0.0017593296413081717
+      },
+      "qc_passed": 88,
+      "test_patients": 4,
+      "train_patients": 11,
+      "validation_patients": 3
+    },
+    {
+      "augmentation_and_qc_seconds": 3.0026678329886636,
+      "augmented_pairs": 96,
+      "cavity_volume_ratio": {
+        "max": 1.0081650831353919,
+        "mean": 1.000365987521481,
+        "min": 0.9969520492026342,
+        "sample_sd": 0.0017476732005122237
+      },
+      "fold": 3,
+      "myocardium_volume_ratio": {
+        "max": 1.0047398713463491,
+        "mean": 1.0001057274460161,
+        "min": 0.9967360434063838,
+        "sample_sd": 0.0015868121814796535
+      },
+      "qc_passed": 96,
+      "test_patients": 3,
+      "train_patients": 12,
+      "validation_patients": 3
+    },
+    {
+      "augmentation_and_qc_seconds": 3.0175206659914693,
+      "augmented_pairs": 88,
+      "cavity_volume_ratio": {
+        "max": 1.0081650831353919,
+        "mean": 1.0001927441842424,
+        "min": 0.9973522377861291,
+        "sample_sd": 0.00154223406440057
+      },
+      "fold": 4,
+      "myocardium_volume_ratio": {
+        "max": 1.0047398713463491,
+        "mean": 1.000214427351797,
+        "min": 0.99606245135296,
+        "sample_sd": 0.0013974988752967882
+      },
+      "qc_passed": 88,
+      "test_patients": 3,
+      "train_patients": 11,
+      "validation_patients": 4
+    }
+  ],
+  "global_seed": 25794129,
+  "qc_challenge_suite": {
+    "detected_by_type": {
+      "foreground_volume_loss": 36,
+      "illegal_label": 36,
+      "missing_foreground_class": 36,
+      "nonfinite_intensity": 36,
+      "out_of_range_intensity": 36,
+      "shape_mismatch": 36
+    },
+    "detected_failures": 216,
+    "detection_rate": 1.0,
+    "failure_modes": 6,
+    "interpretation": "A deterministic gate-verification suite; not a substitute for clinical or anatomical validation.",
+    "samples_per_failure_mode": 36,
+    "total_by_type": {
+      "foreground_volume_loss": 36,
+      "illegal_label": 36,
+      "missing_foreground_class": 36,
+      "nonfinite_intensity": 36,
+      "out_of_range_intensity": 36,
+      "shape_mismatch": 36
+    },
+    "total_injected_failures": 216
+  }
+}

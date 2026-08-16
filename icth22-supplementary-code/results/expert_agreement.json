@@ -1,0 +1,198 @@
+{
+  "samples": [
+    {
+      "cavity_dice": 0.9365223660700291,
+      "myocardium_dice": 0.8614713545478497,
+      "sample_id": "Pat01_diastole"
+    },
+    {
+      "cavity_dice": 0.9094264065015115,
+      "myocardium_dice": 0.854967439363761,
+      "sample_id": "Pat01_systole"
+    },
+    {
+      "cavity_dice": 0.9402396340672975,
+      "myocardium_dice": 0.8394822006472492,
+      "sample_id": "Pat02_diastole"
+    },
+    {
+      "cavity_dice": 0.9340707686506191,
+      "myocardium_dice": 0.8789710150689833,
+      "sample_id": "Pat02_systole"
+    },
+    {
+      "cavity_dice": 0.9198062125961812,
+      "myocardium_dice": 0.8580394500896593,
+      "sample_id": "Pat03_diastole"
+    },
+    {
+      "cavity_dice": 0.8703874538745388,
+      "myocardium_dice": 0.9150342901728882,
+      "sample_id": "Pat03_systole"
+    },
+    {
+      "cavity_dice": 0.9360159584736493,
+      "myocardium_dice": 0.87258166111761,
+      "sample_id": "Pat04_diastole"
+    },
+    {
+      "cavity_dice": 0.9101746313918226,
+      "myocardium_dice": 0.8830631399317406,
+      "sample_id": "Pat04_systole"
+    },
+    {
+      "cavity_dice": 0.938946591448305,
+      "myocardium_dice": 0.8752976944514821,
+      "sample_id": "Pat05_diastole"
+    },
+    {
+      "cavity_dice": 0.9133665262351589,
+      "myocardium_dice": 0.9340689439292562,
+      "sample_id": "Pat05_systole"
+    },
+    {
+      "cavity_dice": 0.9191563194708019,
+      "myocardium_dice": 0.8629727796710001,
+      "sample_id": "Pat06_diastole"
+    },
+    {
+      "cavity_dice": 0.877033409130663,
+      "myocardium_dice": 0.9250319326630203,
+      "sample_id": "Pat06_systole"
+    },
+    {
+      "cavity_dice": 0.9474731477533451,
+      "myocardium_dice": 0.8320242312233688,
+      "sample_id": "Pat07_diastole"
+    },
+    {
+      "cavity_dice": 0.9368500243395141,
+      "myocardium_dice": 0.9035325217984522,
+      "sample_id": "Pat07_systole"
+    },
+    {
+      "cavity_dice": 0.9513592786724967,
+      "myocardium_dice": 0.8548783820716043,
+      "sample_id": "Pat08_diastole"
+    },
+    {
+      "cavity_dice": 0.9320585842148088,
+      "myocardium_dice": 0.9082018111254851,
+      "sample_id": "Pat08_systole"
+    },
+    {
+      "cavity_dice": 0.9384250116493221,
+      "myocardium_dice": 0.8429717942762768,
+      "sample_id": "Pat09_diastole"
+    },
+    {
+      "cavity_dice": 0.9079273737473956,
+      "myocardium_dice": 0.8917177641517817,
+      "sample_id": "Pat09_systole"
+    },
+    {
+      "cavity_dice": 0.9492899100304856,
+      "myocardium_dice": 0.8561910890714313,
+      "sample_id": "Pat10_diastole"
+    },
+    {
+      "cavity_dice": 0.9247295559422044,
+      "myocardium_dice": 0.8968177820420564,
+      "sample_id": "Pat10_systole"
+    },
+    {
+      "cavity_dice": 0.9251180143139942,
+      "myocardium_dice": 0.8222392491140695,
+      "sample_id": "Pat11_diastole"
+    },
+    {
+      "cavity_dice": 0.9299060254284135,
+      "myocardium_dice": 0.8802320045015799,
+      "sample_id": "Pat11_systole"
+    },
+    {
+      "cavity_dice": 0.9434516129032258,
+      "myocardium_dice": 0.8377669902912621,
+      "sample_id": "Pat12_diastole"
+    },
+    {
+      "cavity_dice": 0.9396885700717339,
+      "myocardium_dice": 0.8897661822481596,
+      "sample_id": "Pat12_systole"
+    },
+    {
+      "cavity_dice": 0.9518004289423185,
+      "myocardium_dice": 0.8423818663741889,
+      "sample_id": "Pat13_diastole"
+    },
+    {
+      "cavity_dice": 0.9358998932121245,
+      "myocardium_dice": 0.858382330272401,
+      "sample_id": "Pat13_systole"
+    },
+    {
+      "cavity_dice": 0.9520711492542479,
+      "myocardium_dice": 0.8278673530718373,
+      "sample_id": "Pat14_diastole"
+    },
+    {
+      "cavity_dice": 0.9229962110171962,
+      "myocardium_dice": 0.8822566427402091,
+      "sample_id": "Pat14_systole"
+    },
+    {
+      "cavity_dice": 0.9478692363447135,
+      "myocardium_dice": 0.8550259965337955,
+      "sample_id": "Pat15_diastole"
+    },
+    {
+      "cavity_dice": 0.9287509848797508,
+      "myocardium_dice": 0.896006910078998,
+      "sample_id": "Pat15_systole"
+    },
+    {
+      "cavity_dice": 0.8942003901206077,
+      "myocardium_dice": 0.8754922655240855,
+      "sample_id": "Pat16_diastole"
+    },
+    {
+      "cavity_dice": 0.9056487609666,
+      "myocardium_dice": 0.9418021888104735,
+      "sample_id": "Pat16_systole"
+    },
+    {
+      "cavity_dice": 0.9464173825164225,
+      "myocardium_dice": 0.8434700165916094,
+      "sample_id": "Pat17_diastole"
+    },
+    {
+      "cavity_dice": 0.9108652785668928,
+      "myocardium_dice": 0.8804124525916561,
+      "sample_id": "Pat17_systole"
+    },
+    {
+      "cavity_dice": 0.9579218503957536,
+      "myocardium_dice": 0.8004272743457361,
+      "sample_id": "Pat18_diastole"
+    },
+    {
+      "cavity_dice": 0.9421243878034652,
+      "myocardium_dice": 0.825206181439667,
+      "sample_id": "Pat18_systole"
+    }
+  ],
+  "summary": {
+    "cavity_dice": {
+      "max": 0.9579218503957536,
+      "mean": 0.9285552594721559,
+      "min": 0.8703874538745388,
+      "std": 0.02024302669272181
+    },
+    "myocardium_dice": {
+      "max": 0.9418021888104735,
+      "mean": 0.8696125883873524,
+      "min": 0.8004272743457361,
+      "std": 0.0323243304373571
+    }
+  }
+}

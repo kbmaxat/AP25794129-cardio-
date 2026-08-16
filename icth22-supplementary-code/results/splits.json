@@ -1,0 +1,61 @@
+{
+  "folds": [
+    [
+      "Pat07",
+      "Pat10",
+      "Pat11",
+      "Pat15"
+    ],
+    [
+      "Pat02",
+      "Pat05",
+      "Pat09",
+      "Pat18"
+    ],
+    [
+      "Pat03",
+      "Pat06",
+      "Pat08",
+      "Pat17"
+    ],
+    [
+      "Pat01",
+      "Pat04",
+      "Pat12"
+    ],
+    [
+      "Pat13",
+      "Pat14",
+      "Pat16"
+    ]
+  ],
+  "seed": 25794129,
+  "selected_fold": 0,
+  "selected_split": {
+    "test": [
+      "Pat07",
+      "Pat10",
+      "Pat11",
+      "Pat15"
+    ],
+    "train": [
+      "Pat01",
+      "Pat03",
+      "Pat04",
+      "Pat06",
+      "Pat08",
+      "Pat12",
+      "Pat13",
+      "Pat14",
+      "Pat16",
+      "Pat17"
+    ],
+    "validation": [
+      "Pat02",
+      "Pat05",
+      "Pat09",
+      "Pat18"
+    ]
+  },
+  "strategy": "patient-level cross-validation"
+}
