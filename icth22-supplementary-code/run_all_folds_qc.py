@@ -9,8 +9,8 @@ import numpy as np
 
 
 SCRIPT_ROOT = Path(__file__).resolve().parent
-if (SCRIPT_ROOT.parent / "src").is_dir():
-    PROJECT_ROOT = SCRIPT_ROOT.parent
+if (SCRIPT_ROOT / "src").is_dir():
+    PROJECT_ROOT = SCRIPT_ROOT
     DATASET_ROOT = PROJECT_ROOT / "data" / "HeartDatabase"
     OUTPUT = PROJECT_ROOT / "results" / "all_folds_qc_reproduced.json"
 else:
