@@ -1,0 +1,16 @@
+{
+  "seed": 42,
+  "image_size": 224,
+  "batch_size": 32,
+  "num_workers": 4,
+  "folds": 5,
+  "epochs_frozen": 10,
+  "epochs_finetune": 15,
+  "learning_rate_frozen": 0.0001,
+  "learning_rate_finetune": 0.00001,
+  "early_stopping_patience": 5,
+  "dropout": 0.5,
+  "architecture": "vgg16",
+  "pretrained": true,
+  "vgg_blocks_to_unfreeze": 2
+}

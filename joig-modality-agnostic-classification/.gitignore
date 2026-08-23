@@ -1,0 +1,7 @@
+data/raw/
+outputs/
+*.pt
+*.pth
+__pycache__/
+.pytest_cache/
+*.egg-info/

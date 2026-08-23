@@ -1,0 +1,5 @@
+path,label,patient_id,modality,dataset
+raw/camus/patient0001/frame.png,0,CAMUS_0001,echo,CAMUS
+raw/camus/patient0002/frame.png,1,CAMUS_0002,echo,CAMUS
+raw/acdc/patient001/frame.png,0,ACDC_001,mri,ACDC
+raw/acdc/patient002/frame.png,1,ACDC_002,mri,ACDC
