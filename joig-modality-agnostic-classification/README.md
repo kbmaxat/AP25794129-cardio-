@@ -12,7 +12,9 @@ Reproducibility implementation for the manuscript's binary cardiac image classif
 - Accuracy, precision, recall, specificity, F1, ROC-AUC, confusion-matrix counts, fold predictions, and checkpoints.
 - Frozen-checkpoint evaluation on external ACDC/CAMUS manifests and Grad-CAM utilities.
 
-The repository does not contain clinical images. Public datasets must be obtained under their original terms. The local/internal cohort can be added later as manifest rows.
+## Data availability
+
+The ACDC and CAMUS datasets are publicly available from their respective repositories. The internal clinical dataset is not publicly available because of institutional and data-protection restrictions. No clinical images are distributed with this repository.
 
 ## Setup
 
@@ -43,4 +45,4 @@ Run each fold checkpoint on each external set and report the mean and standard d
 
 ## Reproducibility note
 
-The code implements the method described in the article, but the article's numerical results cannot be regenerated until the exact internal training cohort and the downloaded public-dataset manifests are supplied. Dataset files, checkpoints, and outputs are excluded from Git.
+The code implements the method described in the article. Exact reproduction of results involving the internal clinical cohort requires authorized institutional access to that dataset. Dataset files, checkpoints, and outputs are excluded from Git.

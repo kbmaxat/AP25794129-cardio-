@@ -11,4 +11,4 @@ Images are not redistributed. Download the public datasets from their official p
 
 For CAMUS, the manuscript uses LVEF above 55% as normal and below 45% as risk; cases from 45–55% are excluded. For ACDC, the healthy class is normal and the disease groups are mapped to pathology. Verify these mappings against the licenses and metadata supplied with the downloaded datasets.
 
-Place local data below `data/raw/`; this directory is ignored by Git. The internal dataset can be added later by appending manifest rows without changing the code.
+Place local data below `data/raw/`; this directory is ignored by Git. The ACDC and CAMUS datasets are publicly available from their respective repositories. The internal clinical dataset is not publicly available because of institutional and data-protection restrictions; authorized users can connect it by appending manifest rows without changing the code.
