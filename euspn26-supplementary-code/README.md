@@ -1,6 +1,6 @@
 # Verifiable Cardiac MRI Data Preparation: Supplementary Code
 
-This repository contains the public supplementary code and non-image audit artifacts for the ICTH 2026 manuscript:
+This directory contains the public supplementary code and non-image audit artifacts for the EUSPN 2026 conference submission:
 
 > **A Verifiable Framework for Reproducible Data Preparation in 3D+t Cardiac MRI**
 

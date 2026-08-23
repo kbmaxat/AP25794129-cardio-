@@ -24,7 +24,7 @@ else:
         / "HeartDatabase"
         / "HeartDatabase"
     )
-    OUTPUT = ARTICLE_ROOT / "ICTH2026_assets" / "all_folds_qc.json"
+    OUTPUT = ARTICLE_ROOT / "EUSPN2026_assets" / "all_folds_qc.json"
 
 sys.path.insert(0, str(PROJECT_ROOT))
 

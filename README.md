@@ -11,6 +11,7 @@ This repository contains two versions of the project:
 - `ap25794129-cardio-preprocessing` — **main project version**.
 - `for_editor_blinded_review/cardiac-preprocessing-benchmark` — **an anonymized clone for editor/reviewer download** (blinded review package).
 - `joig-modality-agnostic-classification` — reproducibility code for the JOIG modality-agnostic cardiac classification study.
+- `euspn26-supplementary-code` — supplementary code and audit artifacts for the EUSPN 2026 conference submission.
 
 ## Manuscript Status
 
