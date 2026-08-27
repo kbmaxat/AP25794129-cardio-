@@ -221,6 +221,82 @@ def build_camus_manifest(
     return df
 
 
+def build_imagecas_manifest(
+    image_root: str | Path,
+    segmentation_root: str | Path,
+    max_slices_per_patient: int = 10,
+) -> pd.DataFrame:
+    """Build a manifest for the ImageCAS cardiac CTA dataset with the STACOM 2025 whole-heart
+    labelmaps (Hansen et al., 2025), which relabel the original coronary-only annotations into
+    11 structures (background, myocardium, LA, LV, RA, RV, aorta, PA, LAA, coronary, PV).
+
+    Both ``image_root`` (per-patient ``{id}.img.nii.gz`` CT volumes) and ``segmentation_root``
+    (per-patient ``{id}.img.nii.gz`` labelmaps, same filename convention as the images) are
+    required, since the raw ImageCAS images and the STACOM labelmaps are distributed separately
+    and matched only by shared numeric patient id.
+
+    A CT volume can have 200+ axial slices with a non-empty label, far more than the handful of
+    cine-MRI phases per ACDC patient; to keep per-patient contribution comparable to the other
+    datasets in this benchmark (and avoid one CT patient dominating a mixed-corpus batch), at
+    most ``max_slices_per_patient`` positive-mask slices are kept per patient, evenly spaced
+    across that patient's positive-mask z-range rather than the first N encountered.
+    """
+    image_root = Path(image_root)
+    segmentation_root = Path(segmentation_root)
+    rows: list[dict] = []
+
+    image_paths = sorted(
+        image_root.glob("*.img.nii.gz"),
+        key=lambda p: int(p.name.split(".")[0]) if p.name.split(".")[0].isdigit() else p.name,
+    )
+    for image_path in image_paths:
+        source_patient_id = image_path.name.split(".")[0]
+        mask_path = segmentation_root / image_path.name
+        if not mask_path.exists():
+            continue
+
+        mask_img = nib.load(mask_path)
+        mask_array = mask_img.get_fdata(dtype=np.float32)
+        if mask_array.ndim != 3:
+            raise ValueError(f"Unsupported ImageCAS mask dimensionality: {mask_array.shape} at {mask_path}")
+
+        positive_slices = [z for z in range(mask_array.shape[2]) if np.any(mask_array[:, :, z] > 0)]
+        if not positive_slices:
+            continue
+        if len(positive_slices) > max_slices_per_patient:
+            pick_idx = np.linspace(0, len(positive_slices) - 1, num=max_slices_per_patient)
+            positive_slices = sorted({positive_slices[int(round(i))] for i in pick_idx})
+
+        spacing = get_nifti_in_plane_spacing(image_path)
+        patient_id = f"ImageCAS_{source_patient_id}"
+        for slice_index in positive_slices:
+            rows.append(
+                {
+                    "patient_id": patient_id,
+                    "source_patient_id": source_patient_id,
+                    "phase": "static",
+                    "image_path": str(image_path),
+                    "mask_path": str(mask_path),
+                    "slice_index": slice_index,
+                    "dataset": "ImageCAS",
+                    "subset": "unassigned",
+                    "modality": "cardiac_ct",
+                    "view": "axial",
+                    "frame_id": 0,
+                    "group": "public",
+                    "has_positive_mask": True,
+                    "spacing_row_mm": spacing[0] if spacing else None,
+                    "spacing_col_mm": spacing[1] if spacing else None,
+                }
+            )
+
+    df = pd.DataFrame(rows)
+    sort_cols = [col for col in ["dataset", "patient_id", "slice_index"] if col in df.columns]
+    if not df.empty and sort_cols:
+        df = df.sort_values(sort_cols).reset_index(drop=True)
+    return df
+
+
 def summarize_manifest_by_group(df: pd.DataFrame) -> pd.DataFrame:
     if df.empty:
         return pd.DataFrame(columns=["dataset", "subset", "rows", "patients"])
