@@ -1,0 +1,78 @@
+{
+  "config": {
+    "architecture": "unet",
+    "preprocess_mode": "hybrid",
+    "image_height": 256,
+    "image_width": 256,
+    "batch_size": 8,
+    "epochs": 10,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "num_workers": 0,
+    "seed": 42,
+    "validation_seed": 42,
+    "threshold": 0.5,
+    "train_ratio": 0.7,
+    "val_ratio": 0.1,
+    "test_ratio": 0.2,
+    "max_train_samples": null,
+    "max_val_samples": null,
+    "max_test_samples": null,
+    "dataset_filter": [],
+    "early_stopping_patience": 0,
+    "early_stopping_min_epochs": 0,
+    "early_stopping_min_delta": 0.0,
+    "wavelet_level": 2,
+    "nlm_h_multiplier": 0.8,
+    "clahe_clip_limit": 0.03,
+    "preprocess_cache_dir": "C:\\Users\\maksa\\projects\\AP25794129-cardio-v2\\ap25794129-cardio-preprocessing\\outputs\\_preprocess_cache_mmsweep",
+    "gaussian_sigma_mm": null,
+    "nlm_patch_size_mm": 7.6515,
+    "nlm_patch_distance_mm": 9.1818,
+    "clahe_kernel_size_mm": 24.4848
+  },
+  "device": "cuda",
+  "parameter_count": 7762465,
+  "manifest_summary": {
+    "num_rows": 2842,
+    "num_patients": 150,
+    "phases": [
+      "diastole",
+      "systole"
+    ],
+    "datasets": [
+      "ACDC"
+    ],
+    "subsets": [
+      "testing",
+      "training"
+    ]
+  },
+  "train_rows": 1653,
+  "val_rows": 188,
+  "test_rows": 1001,
+  "train_patients": 90,
+  "val_patients": 10,
+  "test_patients": 50,
+  "completed_epochs": 10,
+  "best_epoch": 9,
+  "stopped_early": false,
+  "best_val_loss": 0.09498206758871675,
+  "test_loss": 0.08895901005182948,
+  "test_inference_ms_per_image": 0.48523363094563904,
+  "test_metrics_slice_mean": {
+    "dice": 0.865617802672054,
+    "iou": 0.7876070338124707,
+    "hd95": 16.72296884147655
+  },
+  "test_metrics_patient_mean": {
+    "dice": 0.8684198310059188,
+    "iou": 0.7913104706396018,
+    "hd95": 16.329453037986227,
+    "hd95_mm": 21.725006181944092
+  },
+  "test_metrics_volumetric_mean": {
+    "dice_3d": 0.8956317900530861,
+    "iou_3d": 0.8138174953784255
+  }
+}
