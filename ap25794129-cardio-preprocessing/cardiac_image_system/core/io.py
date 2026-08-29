@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from functools import lru_cache
 from pathlib import Path
 from typing import Union
 
@@ -9,6 +10,23 @@ from PIL import Image
 from skimage.io import imsave
 
 PathLike = Union[str, Path]
+
+
+@lru_cache(maxsize=16)
+def _load_nifti_volume_cached(path_str: str) -> np.ndarray:
+    """Decompress and load a full NIfTI volume as float32, cached by path.
+
+    ``load_grayscale_image``/``load_label_image`` are called once per manifest row
+    (i.e. once per 2D slice), but a 3D source volume (e.g. a full-resolution cardiac
+    CT scan) is shared by every row drawn from the same patient. Without this cache,
+    each row re-decompresses the entire .nii.gz volume just to keep one slice -- cheap
+    for a handful of cine-MRI frames per ACDC patient, but a severe bottleneck for a
+    single CT volume with dozens of sampled slices. Caching the decompressed array
+    (not the slice) lets repeated accesses to the same patient reuse it; maxsize=16
+    bounds memory to a handful of volumes at once (a full-resolution CT volume is on
+    the order of several hundred MB) rather than growing unbounded across an epoch.
+    """
+    return nib.load(path_str).get_fdata(dtype=np.float32)
 
 
 def ensure_float01(image: np.ndarray) -> np.ndarray:
@@ -72,8 +90,7 @@ def load_grayscale_image(path: PathLike, slice_index: int | None = None) -> np.n
         return ensure_float01(np.load(path))
 
     if _is_nifti_path(path):
-        nifti = nib.load(path)
-        arr = nifti.get_fdata(dtype=np.float32)
+        arr = _load_nifti_volume_cached(str(path))
         arr = _extract_nifti_slice(arr, slice_index=slice_index)
         return ensure_float01(arr)
 
@@ -92,8 +109,7 @@ def load_label_image(path: PathLike, slice_index: int | None = None) -> np.ndarr
         return np.asarray(np.load(path), dtype=np.int64)
 
     if _is_nifti_path(path):
-        nifti = nib.load(path)
-        arr = nifti.get_fdata(dtype=np.float32)
+        arr = _load_nifti_volume_cached(str(path))
         arr = _extract_nifti_slice(arr, slice_index=slice_index)
         return np.rint(arr).astype(np.int64)
 
