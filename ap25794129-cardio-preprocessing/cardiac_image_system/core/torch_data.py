@@ -12,7 +12,7 @@ import torch
 from skimage.transform import resize
 from torch.utils.data import Dataset
 
-from cardiac_image_system.core.io import load_grayscale_image, load_label_image
+from cardiac_image_system.core.io import load_grayscale_image_cached, load_label_image_cached
 from cardiac_image_system.core.preprocessing import (
     MmSpaceFilterTargets,
     PreprocessMode,
@@ -200,8 +200,8 @@ class ManifestSegmentationDataset(Dataset):
         if "slice_index" in row.index and not pd.isna(row["slice_index"]):
             slice_index = int(row["slice_index"])
 
-        image = load_grayscale_image(row["image_path"], slice_index=slice_index)
-        raw_mask = load_label_image(row["mask_path"], slice_index=slice_index)
+        image = load_grayscale_image_cached(row["image_path"], slice_index, self.preprocess_cache_dir)
+        raw_mask = load_label_image_cached(row["mask_path"], slice_index, self.preprocess_cache_dir)
         native_height, native_width = image.shape[:2]
 
         effective_params = self.preprocess_params

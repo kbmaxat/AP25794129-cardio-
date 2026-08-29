@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import hashlib
+import os
 from functools import lru_cache
 from pathlib import Path
 from typing import Union
@@ -27,6 +29,38 @@ def _load_nifti_volume_cached(path_str: str) -> np.ndarray:
     the order of several hundred MB) rather than growing unbounded across an epoch.
     """
     return nib.load(path_str).get_fdata(dtype=np.float32)
+
+
+def _raw_slice_cache_key(path: str, slice_index: int | None, kind: str) -> str:
+    payload = f"{kind}|{path}|{slice_index}"
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _load_slice_with_disk_cache(path, slice_index, cache_dir, kind, loader):
+    """Disk-cache wrapper around a raw (unpreprocessed) NIfTI slice load.
+
+    ``_load_nifti_volume_cached`` (an in-memory LRU) only helps when repeated accesses
+    to the same patient land close together; a fully shuffled epoch over many patients
+    defeats a small LRU every time, so training-time wall clock stayed dominated by
+    repeated full-volume decompression even after adding it (measured: ~50 min/epoch
+    unchanged on a 139-patient CT manifest). Unlike volume identity, a decoded 2D slice
+    is tiny (one array, not a whole scan) and depends only on (path, slice_index), never
+    on epoch, seed, or preprocessing mode/params -- so caching it to disk, keyed by
+    those two fields alone, gives a guaranteed cache hit for every access after the
+    first, regardless of shuffle order or how many epochs read it, without needing to
+    hold every patient's volume in RAM at once (unlike a larger in-memory cache would).
+    """
+    cache_root = Path(cache_dir) / "_raw_slices" / kind
+    key = _raw_slice_cache_key(str(path), slice_index, kind)
+    cache_path = cache_root / f"{key}.npy"
+    if cache_path.exists():
+        return np.load(cache_path)
+    arr = loader(path, slice_index=slice_index)
+    cache_root.mkdir(parents=True, exist_ok=True)
+    tmp_path = cache_root / f"{key}.{os.getpid()}.tmp.npy"
+    np.save(tmp_path, arr)
+    os.replace(tmp_path, cache_path)  # atomic on POSIX and Windows NTFS
+    return arr
 
 
 def ensure_float01(image: np.ndarray) -> np.ndarray:
@@ -118,6 +152,29 @@ def load_label_image(path: PathLike, slice_index: int | None = None) -> np.ndarr
     if arr.ndim > 2:
         arr = arr[..., 0]
     return arr.astype(np.int64)
+
+
+def load_grayscale_image_cached(
+    path: PathLike, slice_index: int | None, cache_dir: PathLike | None
+) -> np.ndarray:
+    """``load_grayscale_image``, disk-cached per (path, slice_index) when a NIfTI source
+    and a ``cache_dir`` are given; identical to the uncached call otherwise (PNG/NumPy
+    sources are already a single small file, so caching them again is not worthwhile)."""
+    path = Path(path)
+    if cache_dir is None or not _is_nifti_path(path):
+        return load_grayscale_image(path, slice_index=slice_index)
+    return _load_slice_with_disk_cache(path, slice_index, cache_dir, "image", load_grayscale_image)
+
+
+def load_label_image_cached(
+    path: PathLike, slice_index: int | None, cache_dir: PathLike | None
+) -> np.ndarray:
+    """``load_label_image``, disk-cached per (path, slice_index); see
+    ``load_grayscale_image_cached``."""
+    path = Path(path)
+    if cache_dir is None or not _is_nifti_path(path):
+        return load_label_image(path, slice_index=slice_index)
+    return _load_slice_with_disk_cache(path, slice_index, cache_dir, "label", load_label_image)
 
 
 def save_grayscale_image(path: PathLike, image: np.ndarray) -> None:
