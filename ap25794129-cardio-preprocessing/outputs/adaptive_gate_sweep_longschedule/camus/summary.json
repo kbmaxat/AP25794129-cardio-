@@ -1,0 +1,55 @@
+{
+  "modes": [
+    "none",
+    "gaussian",
+    "wavelet",
+    "nlm",
+    "clahe"
+  ],
+  "device": "cuda",
+  "parameter_count": 7768630,
+  "manifest_summary": {
+    "num_rows": 2000,
+    "num_patients": 500,
+    "phases": [
+      "diastole",
+      "systole"
+    ],
+    "datasets": [
+      "CAMUS"
+    ],
+    "subsets": [
+      "testing",
+      "training",
+      "validation"
+    ]
+  },
+  "train_rows": 1600,
+  "val_rows": 200,
+  "test_rows": 200,
+  "train_patients": 400,
+  "val_patients": 50,
+  "test_patients": 50,
+  "completed_epochs": 25,
+  "best_epoch": 15,
+  "stopped_early": true,
+  "best_val_loss": 0.08818680137395858,
+  "test_loss": 0.0909056955575943,
+  "test_inference_ms_per_image": 0.42567300086375326,
+  "test_metrics_patient_mean": {
+    "dice": 0.9257384308958355,
+    "iou": 0.8631230469885521,
+    "hd95": 12.135719833639014
+  },
+  "test_metrics_volumetric_mean": {
+    "dice_3d": 0.9257384308958356,
+    "iou_3d": 0.863123046988552
+  },
+  "mean_gate_weight_by_mode": {
+    "none": 0.14036015894263984,
+    "gaussian": 0.060059407157823444,
+    "wavelet": 0.17109566079452634,
+    "nlm": 0.046790079572238026,
+    "clahe": 0.5816946978867054
+  }
+}
