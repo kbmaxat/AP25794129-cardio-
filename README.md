@@ -18,6 +18,12 @@ This repository contains two versions of the project:
 - Submitted to **Radiology Advances** (Manuscript ID: `RADADV-2026-179`) — decision received 2026-07-31: not accepted. The editors' feedback centered on journal fit (the work suits an engineering/data-science readership better than Radiology Advances' primarily clinical audience); no methodological concerns were raised.
 - A revised submission to **Computerized Medical Imaging and Graphics** (Elsevier) is in preparation.
 
+## Published article
+
+- Journal: **Bulletin of Shakarim University. Technical Sciences** — https://tech.vestnik.shakarim.kz/jour
+- DOI: **https://doi.org/10.53360/2788-7995-2026-2(22)-7**
+- PDF: `publications/shakarim-2026/shakarim.pdf`
+
 ## Results Provenance and Integrity
 
 - The values in `ap25794129-cardio-preprocessing/docs/final_results_radiology_ai.md` and related CSV tables are transcribed from the Radiology Advances submission tables.
