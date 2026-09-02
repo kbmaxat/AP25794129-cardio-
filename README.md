@@ -13,10 +13,17 @@ This repository contains two versions of the project:
 - `joig-modality-agnostic-classification` — reproducibility code for the JOIG modality-agnostic cardiac classification study.
 - `euspn26-supplementary-code` — supplementary code and audit artifacts for the EUSPN 2026 conference submission.
 
-## Manuscript Status
+## Publication
 
-- Submitted to **Radiology Advances** (Manuscript ID: `RADADV-2026-179`) — decision received 2026-07-31: not accepted. The editors' feedback centered on journal fit (the work suits an engineering/data-science readership better than Radiology Advances' primarily clinical audience); no methodological concerns were raised.
-- A revised submission to **Computerized Medical Imaging and Graphics** (Elsevier) is in preparation.
+- Article page: https://tech.vestnik.shakarim.kz/jour/article/view/2651
+- DOI: https://doi.org/10.53360/2788-7995-2026-2(22)-7
+
+## Brief Results Summary
+
+- Under the fixed benchmark setup, raw input (`none`) remained the strongest overall baseline.
+- No preprocessing mode showed a Holm-supported Dice improvement over `none`.
+- CLAHE and hybrid preprocessing frequently reduced segmentation performance.
+- In the ACDC multiclass follow-up, `none` remained best on macro Dice.
 
 ## Results Provenance and Integrity
 
