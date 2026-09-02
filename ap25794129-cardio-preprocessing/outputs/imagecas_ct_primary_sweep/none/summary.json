@@ -1,0 +1,76 @@
+{
+  "config": {
+    "architecture": "unet",
+    "preprocess_mode": "none",
+    "image_height": 256,
+    "image_width": 256,
+    "batch_size": 8,
+    "epochs": 10,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "num_workers": 0,
+    "seed": 42,
+    "validation_seed": 42,
+    "threshold": 0.5,
+    "train_ratio": 0.7,
+    "val_ratio": 0.1,
+    "test_ratio": 0.2,
+    "max_train_samples": null,
+    "max_val_samples": null,
+    "max_test_samples": null,
+    "dataset_filter": [],
+    "early_stopping_patience": 0,
+    "early_stopping_min_epochs": 0,
+    "early_stopping_min_delta": 0.0,
+    "wavelet_level": 2,
+    "nlm_h_multiplier": 0.8,
+    "clahe_clip_limit": 0.03,
+    "preprocess_cache_dir": "C:\\Users\\maksa\\projects\\AP25794129-cardio-v2\\ap25794129-cardio-preprocessing\\outputs\\_preprocess_cache_imagecas",
+    "gaussian_sigma_mm": null,
+    "nlm_patch_size_mm": null,
+    "nlm_patch_distance_mm": null,
+    "clahe_kernel_size_mm": null
+  },
+  "device": "cuda",
+  "parameter_count": 7762465,
+  "manifest_summary": {
+    "num_rows": 1980,
+    "num_patients": 198,
+    "phases": [
+      "static"
+    ],
+    "datasets": [
+      "ImageCAS"
+    ],
+    "subsets": [
+      "unassigned"
+    ]
+  },
+  "train_rows": 1390,
+  "val_rows": 200,
+  "test_rows": 390,
+  "train_patients": 139,
+  "val_patients": 20,
+  "test_patients": 39,
+  "completed_epochs": 10,
+  "best_epoch": 10,
+  "stopped_early": false,
+  "best_val_loss": 0.11546863585710526,
+  "test_loss": 0.11569940154345668,
+  "test_inference_ms_per_image": 0.6877892009389656,
+  "test_metrics_slice_mean": {
+    "dice": 0.871596520716598,
+    "iou": 0.7959060719936327,
+    "hd95": 24.397749741670822
+  },
+  "test_metrics_patient_mean": {
+    "dice": 0.8715965207165979,
+    "iou": 0.7959060719936327,
+    "hd95": 24.397749741670825,
+    "hd95_mm": 17.704783525820456
+  },
+  "test_metrics_volumetric_mean": {
+    "dice_3d": 0.9104336778108593,
+    "iou_3d": 0.8362259717326916
+  }
+}

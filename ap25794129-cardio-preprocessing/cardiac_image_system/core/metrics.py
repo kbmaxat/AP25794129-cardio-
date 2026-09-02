@@ -34,6 +34,33 @@ def iou(mask_true: np.ndarray, mask_pred: np.ndarray, eps: float = 1e-8) -> floa
     return float((inter + eps) / (union + eps))
 
 
+def overlap_counts(mask_true: np.ndarray, mask_pred: np.ndarray) -> dict[str, int]:
+    """Intersection and area counts for a single slice, meant to be pooled across slices.
+
+    Summing these counts across every slice of a patient (or patient-phase) volume before
+    computing a ratio gives a genuine volumetric Dice/IoU (mathematically identical to running
+    ``dice``/``iou`` on the full stacked 3D volume), which is not the same statistic as the mean
+    of per-slice Dice/IoU ratios -- mean-of-ratios is not equal to ratio-of-sums, particularly
+    for slices with few foreground pixels.
+    """
+    true = np.asarray(mask_true).astype(bool)
+    pred = np.asarray(mask_pred).astype(bool)
+    return {
+        "intersection": int(np.logical_and(true, pred).sum()),
+        "true_area": int(true.sum()),
+        "pred_area": int(pred.sum()),
+    }
+
+
+def dice_from_counts(intersection: int, true_area: int, pred_area: int, eps: float = 1e-8) -> float:
+    return float((2.0 * intersection + eps) / (true_area + pred_area + eps))
+
+
+def iou_from_counts(intersection: int, true_area: int, pred_area: int, eps: float = 1e-8) -> float:
+    union = true_area + pred_area - intersection
+    return float((intersection + eps) / (union + eps))
+
+
 def relative_area_error(mask_true: np.ndarray, mask_pred: np.ndarray, eps: float = 1e-8) -> float:
     true_area = np.asarray(mask_true).astype(bool).sum()
     pred_area = np.asarray(mask_pred).astype(bool).sum()
@@ -46,8 +73,14 @@ def _surface(mask: np.ndarray) -> np.ndarray:
     return mask ^ eroded
 
 
-def hd95(mask_true: np.ndarray, mask_pred: np.ndarray) -> float:
-    """Compute 95th percentile Hausdorff distance for binary masks."""
+def hd95(mask_true: np.ndarray, mask_pred: np.ndarray, spacing: tuple[float, float] | None = None) -> float:
+    """Compute 95th percentile Hausdorff distance for binary masks.
+
+    ``spacing`` is the physical size of one pixel along each axis, e.g. ``(row_mm, col_mm)`` from
+    the source image's NIfTI header. When omitted (the default), distances are in pixel units at
+    whatever resolution the masks were resampled to, matching this project's original behavior.
+    When provided, distances are in the same physical unit as ``spacing`` (typically millimeters).
+    """
     true = np.asarray(mask_true).astype(bool)
     pred = np.asarray(mask_pred).astype(bool)
 
@@ -59,8 +92,8 @@ def hd95(mask_true: np.ndarray, mask_pred: np.ndarray) -> float:
     true_surface = _surface(true)
     pred_surface = _surface(pred)
 
-    dt_true = distance_transform_edt(~true_surface)
-    dt_pred = distance_transform_edt(~pred_surface)
+    dt_true = distance_transform_edt(~true_surface, sampling=spacing)
+    dt_pred = distance_transform_edt(~pred_surface, sampling=spacing)
 
     distances_true_to_pred = dt_pred[true_surface]
     distances_pred_to_true = dt_true[pred_surface]

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Literal
 
 import numpy as np
@@ -20,10 +20,68 @@ class PreprocessParams:
     wavelet_name: str = "haar"
     wavelet_level: int = 2
     nlm_h: float | None = None
+    nlm_h_multiplier: float = 0.8
     nlm_patch_size: int = 5
     nlm_patch_distance: int = 6
     clahe_clip_limit: float = 0.03
     clahe_kernel_size: int = 16
+
+
+@dataclass(frozen=True)
+class MmSpaceFilterTargets:
+    """Physical-scale (millimeter) targets for the pixel-space filter parameters in
+    ``PreprocessParams`` that represent a spatial extent (kernel/patch/window size).
+
+    The primary benchmark parameterizes these filters in pixels, applied at each image's native
+    resolution; because ACDC and CAMUS (and different patients within ACDC) differ in native pixel
+    spacing, a fixed pixel-space parameter corresponds to a different physical filter strength for
+    different patients. Setting an mm target here and converting it per-image via
+    ``resolve_mm_space_params`` holds the physical filter strength constant across patients
+    instead. Fields left as ``None`` fall back to the corresponding pixel-space default in the
+    base ``PreprocessParams`` unchanged (not converted).
+    """
+
+    gaussian_sigma_mm: float | None = None
+    nlm_patch_size_mm: float | None = None
+    nlm_patch_distance_mm: float | None = None
+    clahe_kernel_size_mm: float | None = None
+
+
+def resolve_mm_space_params(
+    base_params: PreprocessParams,
+    targets: MmSpaceFilterTargets,
+    spacing_mm: tuple[float, float] | None,
+) -> PreprocessParams:
+    """Return a ``PreprocessParams`` with mm-space ``targets`` converted to pixels for this image.
+
+    Anisotropic in-plane spacing (``spacing_mm`` may have unequal row/column components) is
+    reduced to a single isotropic mm-per-pixel scale via the mean of the two axes, since the
+    filters this project implements (Gaussian sigma, NLM patch/search windows, CLAHE tile size)
+    are themselves isotropic pixel-space parameters, not directionally aware. When ``spacing_mm``
+    is ``None`` (spacing unavailable for this image), ``base_params`` is returned unchanged --
+    mm-space conversion silently does nothing rather than raising, since spacing is not available
+    for every source in this pipeline.
+    """
+    if spacing_mm is None:
+        return base_params
+
+    mm_per_pixel = (spacing_mm[0] + spacing_mm[1]) / 2.0
+    if mm_per_pixel <= 0:
+        return base_params
+
+    updates: dict[str, float | int] = {}
+    if targets.gaussian_sigma_mm is not None:
+        updates["gaussian_sigma"] = targets.gaussian_sigma_mm / mm_per_pixel
+    if targets.nlm_patch_size_mm is not None:
+        updates["nlm_patch_size"] = max(1, round(targets.nlm_patch_size_mm / mm_per_pixel))
+    if targets.nlm_patch_distance_mm is not None:
+        updates["nlm_patch_distance"] = max(1, round(targets.nlm_patch_distance_mm / mm_per_pixel))
+    if targets.clahe_kernel_size_mm is not None:
+        updates["clahe_kernel_size"] = max(1, round(targets.clahe_kernel_size_mm / mm_per_pixel))
+
+    if not updates:
+        return base_params
+    return replace(base_params, **updates)
 
 
 def normalize_minmax(image: np.ndarray, eps: float = 1e-8) -> np.ndarray:
@@ -65,12 +123,18 @@ def apply_wavelet_denoise(image: np.ndarray, wavelet_name: str = "haar", level: 
     return ensure_float01(reconstructed)
 
 
-def apply_nlm(image: np.ndarray, h: float | None = None, patch_size: int = 5, patch_distance: int = 6) -> np.ndarray:
+def apply_nlm(
+    image: np.ndarray,
+    h: float | None = None,
+    patch_size: int = 5,
+    patch_distance: int = 6,
+    h_sigma_multiplier: float = 0.8,
+) -> np.ndarray:
     image = ensure_float01(image)
     if float(np.std(image)) <= 1e-8:
         return image.astype(np.float32, copy=True)
     sigma = float(np.mean(estimate_sigma(image, channel_axis=None)))
-    h_value = h if h is not None else max(0.8 * sigma, 0.01)
+    h_value = h if h is not None else max(h_sigma_multiplier * sigma, 0.01)
     out = denoise_nl_means(
         image,
         h=h_value,
@@ -99,12 +163,12 @@ def preprocess_image(image: np.ndarray, mode: PreprocessMode, params: Preprocess
     if mode == "wavelet":
         return apply_wavelet_denoise(x, params.wavelet_name, params.wavelet_level)
     if mode == "nlm":
-        return apply_nlm(x, params.nlm_h, params.nlm_patch_size, params.nlm_patch_distance)
+        return apply_nlm(x, params.nlm_h, params.nlm_patch_size, params.nlm_patch_distance, params.nlm_h_multiplier)
     if mode == "clahe":
         return apply_clahe(x, params.clahe_clip_limit, params.clahe_kernel_size)
     if mode == "hybrid":
         x = apply_wavelet_denoise(x, params.wavelet_name, params.wavelet_level)
-        x = apply_nlm(x, params.nlm_h, params.nlm_patch_size, params.nlm_patch_distance)
+        x = apply_nlm(x, params.nlm_h, params.nlm_patch_size, params.nlm_patch_distance, params.nlm_h_multiplier)
         x = apply_clahe(x, params.clahe_clip_limit, params.clahe_kernel_size)
         return x
     raise ValueError(f"Unknown preprocessing mode: {mode}")

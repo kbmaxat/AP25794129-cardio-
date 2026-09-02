@@ -1,0 +1,12 @@
+experiment: train_adaptive_gate_unet
+modes: ['none', 'gaussian', 'wavelet', 'nlm', 'clahe']
+epochs: 10
+batch_size: 8
+device: cuda
+parameter_count: 7768630
+manifest: C:\Users\maksa\projects\AP25794129-cardio-v2\ap25794129-cardio-preprocessing\data\manifests_local\imagecas_1_200.csv
+output_dir: C:\Users\maksa\projects\AP25794129-cardio-v2\ap25794129-cardio-preprocessing\outputs\adaptive_gate_sweep\imagecas
+completed_epochs: 10
+best_epoch: 9
+stopped_early: False
+

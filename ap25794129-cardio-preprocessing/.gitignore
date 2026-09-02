@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+
+outputs/
+data/manifests_local/
+data/manifests_local_backup*/
+
+# Real datasets live outside the repository root and must not be committed here.
+data/sample/

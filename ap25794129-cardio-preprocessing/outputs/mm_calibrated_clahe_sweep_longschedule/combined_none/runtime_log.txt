@@ -1,0 +1,12 @@
+experiment: train_unet_baseline
+mode: none
+epochs: 50
+batch_size: 8
+device: cuda
+parameter_count: 7762465
+manifest: C:\Users\maksa\projects\AP25794129-cardio-v2\ap25794129-cardio-preprocessing\data\manifests_local\segmentation_public_combined.csv
+output_dir: C:\Users\maksa\projects\AP25794129-cardio-v2\ap25794129-cardio-preprocessing\outputs\mm_calibrated_clahe_sweep_longschedule\combined_none
+completed_epochs: 41
+best_epoch: 31
+stopped_early: True
+

@@ -1,0 +1,12 @@
+experiment: train_unet_baseline
+mode: wavelet
+epochs: 10
+batch_size: 8
+device: cuda
+parameter_count: 7762465
+manifest: C:\Users\maksa\projects\AP25794129-cardio-v2\ap25794129-cardio-preprocessing\data\manifests_local\imagecas_1_200.csv
+output_dir: C:\Users\maksa\projects\AP25794129-cardio-v2\ap25794129-cardio-preprocessing\outputs\imagecas_ct_primary_sweep\wavelet
+completed_epochs: 10
+best_epoch: 10
+stopped_early: False
+

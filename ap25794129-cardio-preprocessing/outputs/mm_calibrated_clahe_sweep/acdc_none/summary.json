@@ -1,0 +1,78 @@
+{
+  "config": {
+    "architecture": "unet",
+    "preprocess_mode": "none",
+    "image_height": 256,
+    "image_width": 256,
+    "batch_size": 8,
+    "epochs": 10,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "num_workers": 0,
+    "seed": 42,
+    "validation_seed": 42,
+    "threshold": 0.5,
+    "train_ratio": 0.7,
+    "val_ratio": 0.1,
+    "test_ratio": 0.2,
+    "max_train_samples": null,
+    "max_val_samples": null,
+    "max_test_samples": null,
+    "dataset_filter": [],
+    "early_stopping_patience": 0,
+    "early_stopping_min_epochs": 0,
+    "early_stopping_min_delta": 0.0,
+    "wavelet_level": 2,
+    "nlm_h_multiplier": 0.8,
+    "clahe_clip_limit": 0.03,
+    "preprocess_cache_dir": "C:\\Users\\maksa\\projects\\AP25794129-cardio-v2\\ap25794129-cardio-preprocessing\\outputs\\_preprocess_cache_mmsweep",
+    "gaussian_sigma_mm": null,
+    "nlm_patch_size_mm": null,
+    "nlm_patch_distance_mm": null,
+    "clahe_kernel_size_mm": null
+  },
+  "device": "cuda",
+  "parameter_count": 7762465,
+  "manifest_summary": {
+    "num_rows": 2842,
+    "num_patients": 150,
+    "phases": [
+      "diastole",
+      "systole"
+    ],
+    "datasets": [
+      "ACDC"
+    ],
+    "subsets": [
+      "testing",
+      "training"
+    ]
+  },
+  "train_rows": 1653,
+  "val_rows": 188,
+  "test_rows": 1001,
+  "train_patients": 90,
+  "val_patients": 10,
+  "test_patients": 50,
+  "completed_epochs": 10,
+  "best_epoch": 10,
+  "stopped_early": false,
+  "best_val_loss": 0.08408200119932492,
+  "test_loss": 0.08038008658008443,
+  "test_inference_ms_per_image": 0.5917329365130417,
+  "test_metrics_slice_mean": {
+    "dice": 0.8759778083935731,
+    "iou": 0.8073425311337179,
+    "hd95": 11.121536281043372
+  },
+  "test_metrics_patient_mean": {
+    "dice": 0.8788358813966832,
+    "iou": 0.810718747552775,
+    "hd95": 11.404671896820682,
+    "hd95_mm": 15.106889896528145
+  },
+  "test_metrics_volumetric_mean": {
+    "dice_3d": 0.9137977886950356,
+    "iou_3d": 0.8434814881912233
+  }
+}

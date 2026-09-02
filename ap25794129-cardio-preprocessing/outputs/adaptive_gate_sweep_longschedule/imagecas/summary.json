@@ -1,0 +1,52 @@
+{
+  "modes": [
+    "none",
+    "gaussian",
+    "wavelet",
+    "nlm",
+    "clahe"
+  ],
+  "device": "cuda",
+  "parameter_count": 7768630,
+  "manifest_summary": {
+    "num_rows": 1980,
+    "num_patients": 198,
+    "phases": [
+      "static"
+    ],
+    "datasets": [
+      "ImageCAS"
+    ],
+    "subsets": [
+      "unassigned"
+    ]
+  },
+  "train_rows": 1390,
+  "val_rows": 200,
+  "test_rows": 390,
+  "train_patients": 139,
+  "val_patients": 20,
+  "test_patients": 39,
+  "completed_epochs": 50,
+  "best_epoch": 43,
+  "stopped_early": false,
+  "best_val_loss": 0.05732873529195785,
+  "test_loss": 0.06460021683300028,
+  "test_inference_ms_per_image": 0.7702026364344432,
+  "test_metrics_patient_mean": {
+    "dice": 0.9227002508588606,
+    "iou": 0.8721235334807642,
+    "hd95": 12.981917792464616
+  },
+  "test_metrics_volumetric_mean": {
+    "dice_3d": 0.9523955884371955,
+    "iou_3d": 0.9092839781400446
+  },
+  "mean_gate_weight_by_mode": {
+    "none": 0.09413510847072569,
+    "gaussian": 0.1648277720388694,
+    "wavelet": 0.2971320032882384,
+    "nlm": 0.21543191988498733,
+    "clahe": 0.2284731961762867
+  }
+}

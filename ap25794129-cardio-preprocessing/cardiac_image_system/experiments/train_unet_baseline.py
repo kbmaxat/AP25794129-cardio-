@@ -17,15 +17,28 @@ from torch.optim.lr_scheduler import CosineAnnealingLR
 from torch.utils.data import DataLoader
 
 from cardiac_image_system.core.manifest import load_manifest, summarize_manifest
-from cardiac_image_system.core.metrics import dice, hd95, iou
-from cardiac_image_system.core.splits import export_split_manifests, make_patient_level_random_split, split_by_subset_column
+from cardiac_image_system.core.metrics import dice, dice_from_counts, hd95, iou, iou_from_counts, overlap_counts
+from cardiac_image_system.core.preprocessing import MmSpaceFilterTargets, PreprocessParams
+from cardiac_image_system.core.splits import (
+    export_split_manifests,
+    make_patient_level_random_split,
+    split_by_subset_column_carving_validation,
+)
 from cardiac_image_system.core.torch_data import ManifestSegmentationDataset
-from cardiac_image_system.core.validation import aggregate_patient_level, save_runtime_log, validate_patient_level_split
-from cardiac_image_system.models import UNet2D
+from cardiac_image_system.core.validation import (
+    aggregate_patient_level,
+    aggregate_volumetric_level,
+    save_runtime_log,
+    validate_patient_level_split,
+)
+from cardiac_image_system.models import AttentionUNet2D, TransUNet2D, UNet2D
+
+ARCHITECTURES = {"unet": UNet2D, "attention_unet": AttentionUNet2D, "transunet": TransUNet2D}
 
 
 @dataclass(frozen=True)
 class TrainConfig:
+    architecture: str = "unet"
     preprocess_mode: str = "none"
     image_height: int = 256
     image_width: int = 256
@@ -35,6 +48,7 @@ class TrainConfig:
     weight_decay: float = 1e-4
     num_workers: int = 0
     seed: int = 42
+    validation_seed: int = 42
     threshold: float = 0.5
     train_ratio: float = 0.7
     val_ratio: float = 0.1
@@ -46,6 +60,36 @@ class TrainConfig:
     early_stopping_patience: int = 0
     early_stopping_min_epochs: int = 0
     early_stopping_min_delta: float = 0.0
+    wavelet_level: int = 2
+    nlm_h_multiplier: float = 0.8
+    clahe_clip_limit: float = 0.03
+    preprocess_cache_dir: str | None = None
+    gaussian_sigma_mm: float | None = None
+    nlm_patch_size_mm: float | None = None
+    nlm_patch_distance_mm: float | None = None
+    clahe_kernel_size_mm: float | None = None
+
+    def mm_space_targets(self) -> MmSpaceFilterTargets | None:
+        if (
+            self.gaussian_sigma_mm is None
+            and self.nlm_patch_size_mm is None
+            and self.nlm_patch_distance_mm is None
+            and self.clahe_kernel_size_mm is None
+        ):
+            return None
+        return MmSpaceFilterTargets(
+            gaussian_sigma_mm=self.gaussian_sigma_mm,
+            nlm_patch_size_mm=self.nlm_patch_size_mm,
+            nlm_patch_distance_mm=self.nlm_patch_distance_mm,
+            clahe_kernel_size_mm=self.clahe_kernel_size_mm,
+        )
+
+    def preprocess_params(self) -> PreprocessParams:
+        return PreprocessParams(
+            wavelet_level=self.wavelet_level,
+            nlm_h_multiplier=self.nlm_h_multiplier,
+            clahe_clip_limit=self.clahe_clip_limit,
+        )
 
 
 def set_seed(seed: int) -> None:
@@ -89,14 +133,27 @@ def apply_dataset_filter(df: pd.DataFrame, dataset_filter: tuple[str, ...]) -> p
 
 def resolve_split_map(manifest: pd.DataFrame, config: TrainConfig) -> dict[str, pd.DataFrame]:
     df = apply_dataset_filter(manifest, config.dataset_filter)
+    stratify_by = [col for col in ["dataset", "group", "view"] if col in df.columns]
+
+    # Always routed through the carving-aware splitter rather than split_by_subset_column
+    # directly: for a manifest spanning multiple datasets (e.g. pooled ACDC+CAMUS), a native
+    # validation tag supplied by only one dataset is not sufficient on its own -- see
+    # split_by_subset_column_carving_validation's per-dataset carving logic, which delegates to
+    # split_by_subset_column's exact behavior when every dataset present already has native
+    # validation coverage (or when there is only one dataset), and otherwise carves validation
+    # only for the datasets missing it.
     try:
-        subset_split = split_by_subset_column(df)
-        if not subset_split["train"].empty and not subset_split["val"].empty and not subset_split["test"].empty:
-            return subset_split
+        split_result = split_by_subset_column_carving_validation(
+            df,
+            val_ratio=config.val_ratio,
+            validation_seed=config.validation_seed,
+            stratify_by=stratify_by,
+        )
+        if not split_result["train"].empty and not split_result["val"].empty and not split_result["test"].empty:
+            return split_result
     except ValueError:
         pass
 
-    stratify_by = [col for col in ["dataset", "group", "view"] if col in df.columns]
     return make_patient_level_random_split(
         df,
         train_ratio=config.train_ratio,
@@ -117,8 +174,11 @@ def build_dataloader(
         manifest=manifest,
         image_size=(config.image_height, config.image_width),
         preprocess_mode=config.preprocess_mode,
+        preprocess_params=config.preprocess_params(),
         augment=augment,
         seed=config.seed,
+        preprocess_cache_dir=config.preprocess_cache_dir,
+        mm_space_targets=config.mm_space_targets(),
     )
     return DataLoader(
         dataset,
@@ -177,22 +237,40 @@ def evaluate_model(
             probs = torch.sigmoid(logits).cpu().numpy()
             true_masks = masks.cpu().numpy()
 
+            spacing_rows = batch.get("resized_spacing_row_mm")
+            spacing_cols = batch.get("resized_spacing_col_mm")
+
             batch_size = probs.shape[0]
             for index in range(batch_size):
                 pred_mask = probs[index, 0] >= threshold
                 true_mask = true_masks[index, 0] >= 0.5
+                counts = overlap_counts(true_mask, pred_mask)
+
+                spacing_row = float(spacing_rows[index]) if spacing_rows is not None else float("nan")
+                spacing_col = float(spacing_cols[index]) if spacing_cols is not None else float("nan")
+                hd95_mm = (
+                    hd95(true_mask, pred_mask, spacing=(spacing_row, spacing_col))
+                    if np.isfinite(spacing_row) and np.isfinite(spacing_col)
+                    else float("nan")
+                )
+
                 rows.append(
                     {
                         "patient_id": batch["patient_id"][index],
                         "mode": mode,
                         "phase": batch["phase"][index],
+                        "view": batch["view"][index],
                         "dataset": batch["dataset"][index],
                         "subset": batch["subset"][index],
                         "dice": dice(true_mask, pred_mask),
                         "iou": iou(true_mask, pred_mask),
                         "hd95": hd95(true_mask, pred_mask),
+                        "hd95_mm": hd95_mm,
+                        "spacing_row_mm": spacing_row,
+                        "spacing_col_mm": spacing_col,
                         "foreground_pixels_true": int(true_mask.sum()),
                         "foreground_pixels_pred": int(pred_mask.sum()),
+                        "intersection_pixels": counts["intersection"],
                     }
                 )
 
@@ -216,6 +294,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--manifest", required=True, type=Path)
     parser.add_argument("--output-dir", required=True, type=Path)
+    parser.add_argument("--architecture", choices=sorted(ARCHITECTURES), default="unet")
     parser.add_argument("--mode", default="none")
     parser.add_argument("--epochs", type=int, default=10)
     parser.add_argument("--batch-size", type=int, default=8)
@@ -224,6 +303,7 @@ def main() -> None:
     parser.add_argument("--learning-rate", type=float, default=1e-3)
     parser.add_argument("--weight-decay", type=float, default=1e-4)
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--validation-seed", type=int, default=42)
     parser.add_argument("--threshold", type=float, default=0.5)
     parser.add_argument("--num-workers", type=int, default=0)
     parser.add_argument("--train-ratio", type=float, default=0.7)
@@ -236,9 +316,18 @@ def main() -> None:
     parser.add_argument("--early-stopping-patience", type=int, default=0)
     parser.add_argument("--early-stopping-min-epochs", type=int, default=0)
     parser.add_argument("--early-stopping-min-delta", type=float, default=0.0)
+    parser.add_argument("--wavelet-level", type=int, default=2)
+    parser.add_argument("--nlm-h-multiplier", type=float, default=0.8)
+    parser.add_argument("--clahe-clip-limit", type=float, default=0.03)
+    parser.add_argument("--preprocess-cache-dir", type=str, default=None)
+    parser.add_argument("--gaussian-sigma-mm", type=float, default=None)
+    parser.add_argument("--nlm-patch-size-mm", type=float, default=None)
+    parser.add_argument("--nlm-patch-distance-mm", type=float, default=None)
+    parser.add_argument("--clahe-kernel-size-mm", type=float, default=None)
     args = parser.parse_args()
 
     config = TrainConfig(
+        architecture=args.architecture,
         preprocess_mode=args.mode,
         image_height=args.image_height,
         image_width=args.image_width,
@@ -248,6 +337,7 @@ def main() -> None:
         weight_decay=args.weight_decay,
         num_workers=args.num_workers,
         seed=args.seed,
+        validation_seed=args.validation_seed,
         threshold=args.threshold,
         train_ratio=args.train_ratio,
         val_ratio=args.val_ratio,
@@ -259,6 +349,14 @@ def main() -> None:
         early_stopping_patience=args.early_stopping_patience,
         early_stopping_min_epochs=args.early_stopping_min_epochs,
         early_stopping_min_delta=args.early_stopping_min_delta,
+        wavelet_level=args.wavelet_level,
+        nlm_h_multiplier=args.nlm_h_multiplier,
+        clahe_clip_limit=args.clahe_clip_limit,
+        preprocess_cache_dir=args.preprocess_cache_dir,
+        gaussian_sigma_mm=args.gaussian_sigma_mm,
+        nlm_patch_size_mm=args.nlm_patch_size_mm,
+        nlm_patch_distance_mm=args.nlm_patch_distance_mm,
+        clahe_kernel_size_mm=args.clahe_kernel_size_mm,
     )
 
     set_seed(config.seed)
@@ -281,11 +379,11 @@ def main() -> None:
     test_loader = build_dataloader(split_map["test"], config=config, augment=False, shuffle=False)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = UNet2D().to(device)
+    model = ARCHITECTURES[config.architecture]().to(device)
     optimizer = AdamW(model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay)
     scheduler = CosineAnnealingLR(optimizer, T_max=max(config.epochs, 2))
 
-    log(f"Starting baseline run: mode={config.preprocess_mode}, output_dir={output_dir}")
+    log(f"Starting baseline run: architecture={config.architecture}, mode={config.preprocess_mode}, output_dir={output_dir}")
     log(
         "Split summary: "
         f"train={len(split_map['train'])} rows/{split_map['train']['patient_id'].nunique()} patients, "
@@ -384,6 +482,8 @@ def main() -> None:
     test_slice_df.to_csv(output_dir / "test_slice_level.csv", index=False)
     patient_df = aggregate_patient_level(test_slice_df)
     patient_df.to_csv(output_dir / "test_patient_level.csv", index=False)
+    volumetric_df = aggregate_volumetric_level(test_slice_df)
+    volumetric_df.to_csv(output_dir / "test_volumetric_level.csv", index=False)
 
     summary = {
         "config": asdict(config),
@@ -411,6 +511,15 @@ def main() -> None:
             "dice": float(patient_df["dice"].mean()) if not patient_df.empty else float("nan"),
             "iou": float(patient_df["iou"].mean()) if not patient_df.empty else float("nan"),
             "hd95": float(patient_df["hd95"].replace([np.inf, -np.inf], np.nan).mean()) if not patient_df.empty else float("nan"),
+            "hd95_mm": (
+                float(patient_df["hd95_mm"].replace([np.inf, -np.inf], np.nan).dropna().mean())
+                if not patient_df.empty and "hd95_mm" in patient_df.columns and patient_df["hd95_mm"].notna().any()
+                else float("nan")
+            ),
+        },
+        "test_metrics_volumetric_mean": {
+            "dice_3d": float(volumetric_df["dice_3d"].mean()) if not volumetric_df.empty else float("nan"),
+            "iou_3d": float(volumetric_df["iou_3d"].mean()) if not volumetric_df.empty else float("nan"),
         },
     }
     save_json(output_dir / "summary.json", summary)
