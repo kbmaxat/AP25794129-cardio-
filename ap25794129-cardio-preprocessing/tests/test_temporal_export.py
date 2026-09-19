@@ -6,6 +6,7 @@ import pytest
 
 
 SOURCE = Path(__file__).resolve().parents[2] / "research/temporal_v01/export_pilot.py"
+CODE_SHA = "a" * 40
 spec = importlib.util.spec_from_file_location("temporal_export", SOURCE)
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
@@ -16,7 +17,7 @@ def test_export_rejects_incomplete_run(tmp_path):
     run.mkdir()
     module.write_json(run / "status.json", {"status": "failed"})
     with pytest.raises(ValueError, match="completed"):
-        module.export_numeric(run, tmp_path / "public", "commit")
+        module.export_numeric(run, tmp_path / "public", CODE_SHA)
     assert not (tmp_path / "public").exists()
 
 
@@ -38,9 +39,10 @@ def test_export_excludes_private_text_and_paths(tmp_path):
         folder.mkdir()
         module.write_json(folder / "summary.json", {**dict.fromkeys(fields, 0), "mode": mode, "notes": marker})
         module.write_csv(folder / "history.csv", [{"epoch": 1, "train_loss": 1, "dev_loss": 1, "dev_patient_dice": .5, "notes": marker}])
-    module.export_numeric(run, public, "commit")
+    module.export_numeric(run, public, CODE_SHA)
     assert all(marker not in p.read_text(encoding="utf-8") for p in public.iterdir())
     assert json.loads((public / "config.json").read_text())["dataset_root"] is None
+    assert json.loads((public / "metadata.json").read_text())["github_code_commit_format_validated"]
     assert {p.suffix for p in public.iterdir()} == {".csv", ".json"}
     assert all(b"\r\n" not in p.read_bytes() for p in public.iterdir())
     manifest = module.read_json(public / "files_sha256.json")
@@ -62,3 +64,12 @@ def test_replay_compares_all_artifacts(tmp_path):
     result = module.verify_replay(first, second)
     assert not result["all_identical"]
     assert sum(not row["identical"] for row in result["checks"]) == 1
+
+
+def test_export_rejects_unverifiable_commit_identifier(tmp_path):
+    run = tmp_path / "run"
+    run.mkdir()
+    module.write_json(run / "status.json", {"status": "completed"})
+    with pytest.raises(ValueError, match="40-character"):
+        module.export_numeric(run, tmp_path / "public", "commit")
+    assert not (tmp_path / "public").exists()

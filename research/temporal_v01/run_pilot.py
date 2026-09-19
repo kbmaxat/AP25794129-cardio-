@@ -21,6 +21,7 @@ os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 PACKAGE = ROOT / "ap25794129-cardio-preprocessing"
+MODES = ("none", "direct_temporal", "spatial", "temporal")
 sys.path.insert(0, str(PACKAGE))
 
 import cv2
@@ -234,10 +235,34 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", type=Path, default=HERE / "protocol_v01.json")
     parser.add_argument("--data-root", type=Path, default=os.environ.get("CAMUS_ROOT"))
+    parser.add_argument("--training-seed", type=int)
+    parser.add_argument("--epochs", type=int)
+    parser.add_argument("--modes", nargs="+", choices=MODES)
+    parser.add_argument("--epsilon", type=float)
+    parser.add_argument("--correction-weight", type=float)
+    parser.add_argument("--confidence-ablation", choices=("measured", "ones", "zeros"))
     args = parser.parse_args()
     config = json.loads(args.config.read_text(encoding="utf-8"))
     if args.data_root is not None:
         config["dataset_root"] = str(args.data_root.resolve())
+    if args.training_seed is not None:
+        config["training_seed"] = args.training_seed
+    if args.epochs is not None:
+        if args.epochs < 1:
+            parser.error("--epochs must be positive")
+        config["epochs"] = args.epochs
+    if args.modes is not None:
+        config["modes"] = args.modes
+    if args.epsilon is not None:
+        if not 0 < args.epsilon <= 1:
+            parser.error("--epsilon must be in (0, 1]")
+        config["epsilon"] = args.epsilon
+    if args.correction_weight is not None:
+        if args.correction_weight < 0:
+            parser.error("--correction-weight must be non-negative")
+        config["correction_weight"] = args.correction_weight
+    if args.confidence_ablation is not None:
+        config["confidence_ablation"] = args.confidence_ablation
     if not config["dataset_root"]:
         parser.error("Provide --data-root or CAMUS_ROOT")
     if config["stage"] != "technical_pilot" or config["bootstrap_or_hypothesis_testing"]:
@@ -261,6 +286,13 @@ def main():
         data, records = {}, {}
         for partition, patients in selected.items():
             data[partition], records[partition] = load_cases(root, patients, config)
+            confidence_ablation = config.get("confidence_ablation", "measured")
+            if confidence_ablation == "ones":
+                for sample in data[partition]:
+                    sample["confidence"] = np.ones_like(sample["confidence"])
+            elif confidence_ablation == "zeros":
+                for sample in data[partition]:
+                    sample["confidence"] = np.zeros_like(sample["confidence"])
             print(f"Prepared {partition}: {len(patients)} patients, {len(data[partition])} phases", flush=True)
         write_json(run / "data_manifest.json", records)
         event("data_ready", run_id=run_id, train_patients=len(selected["train"]), dev_patients=len(selected["dev"]), access="official_CAMUS_training_only")

@@ -4,6 +4,7 @@ import argparse
 import csv
 import hashlib
 import json
+import re
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -50,6 +51,8 @@ def verify_replay(first, replay):
 def export_numeric(run, destination, remote_code_commit):
     if read_json(run / "status.json")["status"] != "completed":
         raise ValueError("Only completed runs can be exported")
+    if not re.fullmatch(r"[0-9a-f]{40}", remote_code_commit):
+        raise ValueError("github_code_commit must be a 40-character lowercase Git SHA")
     destination.mkdir(parents=True, exist_ok=False)
     config = read_json(run / "protocol.json")
     config["dataset_root"] = None
@@ -75,6 +78,7 @@ def export_numeric(run, destination, remote_code_commit):
         "n_training_seeds": 1, "epochs": config["epochs"],
         "environment": {key: environment[key] for key in ENV_KEYS},
         "github_code_commit": remote_code_commit,
+        "github_code_commit_format_validated": True,
         "patient_split_sha256": sha256(run / "patient_split.json"),
         "code_source_sha256": {key.replace("\\", "/"): value for key, value in source_hashes.items()
                                if key.endswith(".py")},

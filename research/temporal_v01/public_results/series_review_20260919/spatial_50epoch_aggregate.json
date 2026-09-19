@@ -1,0 +1,13 @@
+{
+  "stage": "development_exploratory",
+  "partition": "dev",
+  "n_seeds": 5,
+  "n_unique_dev_patients": 8,
+  "n_splits": 1,
+  "mean_spatial_minus_none": -9.932145476341248e-05,
+  "sd_difference_ddof1": 0.012450690108149675,
+  "positive_seed_differences": 3,
+  "min_difference": -0.012598473578691483,
+  "max_difference": 0.016489975154399872,
+  "hypothesis_testing": false
+}
