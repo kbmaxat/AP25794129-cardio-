@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+.pytest_cache/
+research/temporal_v01/cache/
+research/temporal_v01/runs/
+*.pyc
+research/temporal_v01/*.md
+research/temporal_v01/events.jsonl
+research/temporal_v01/private/
+research/temporal_v01/*.xml
