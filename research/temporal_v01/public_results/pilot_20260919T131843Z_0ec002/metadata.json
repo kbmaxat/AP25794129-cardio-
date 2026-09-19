@@ -1,0 +1,30 @@
+{
+  "run_id": "pilot_20260919T131843Z_0ec002",
+  "stage": "technical_pilot_not_confirmatory",
+  "dataset": "CAMUS",
+  "dataset_partition_access": "official_training_only",
+  "test_evaluation": false,
+  "n_train_patients": 32,
+  "n_dev_patients": 8,
+  "n_training_seeds": 1,
+  "epochs": 12,
+  "environment": {
+    "torch": "2.11.0+cu128",
+    "cuda_runtime": "12.8",
+    "numpy": "2.2.6",
+    "opencv": "4.11.0",
+    "gpu": "NVIDIA GeForce RTX 5070",
+    "base_commit": "5d1f114e7559495c89fc50ea39ac222f4dbcc40c",
+    "protocol_sha256": "248b86d263df1b6931cce606b1b6b3197d02415be4a6bec524d67575e9d7e863"
+  },
+  "github_code_commit": "4ddeb50b59e4f320e513950e7a05f5443aa85fca",
+  "patient_split_sha256": "416e06e4beaf975b70a1945a0b1a806bc1a02fd2e016eb8c7ae152fec7be4413",
+  "code_source_sha256": {
+    "ap25794129-cardio-preprocessing/cardiac_image_system/research_temporal/data.py": "22dcee41aefb688e4000311863adba12e6509beeff4e5ab52b81bb3855fcb231",
+    "ap25794129-cardio-preprocessing/cardiac_image_system/research_temporal/model.py": "00545827b221b7b8b686f139bb0fb31787d1dee9df51a1b65cbb30187a714966",
+    "ap25794129-cardio-preprocessing/cardiac_image_system/research_temporal/__init__.py": "7f31a830b705754613b8020fa5d25bf713df1f96d0607b167f3bdeca515388d4",
+    "ap25794129-cardio-preprocessing/cardiac_image_system/models/unet2d.py": "4ba525baedf913a0bccfd18bf4aa83ca866833be7d63f6c2939be47e24049ecc",
+    "research/temporal_v01/run_pilot.py": "267bf915cbf6f28412faa8904500ec6877297d8d5304406c3f42f27b69741274",
+    "ap25794129-cardio-preprocessing/tests/test_research_temporal.py": "fc1d996e4a49c6b600aee11df6ee374e19799470ea4cfb1406c40345553535b3"
+  }
+}

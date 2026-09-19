@@ -1,0 +1,53 @@
+{
+  "protocol_id": "CARDIO-TEMPORAL-001",
+  "version": "0.1",
+  "stage": "technical_pilot",
+  "created_date": "2026-09-19",
+  "dataset_root": null,
+  "eligible_partition": "training",
+  "view": "4CH",
+  "phases": [
+    "ED",
+    "ES"
+  ],
+  "target_label": 1,
+  "train_patients": 32,
+  "dev_patients": 8,
+  "split_seed": 20260919,
+  "training_seed": 2026,
+  "modes": [
+    "none",
+    "direct_temporal",
+    "spatial",
+    "temporal"
+  ],
+  "image_size": 128,
+  "batch_size": 8,
+  "epochs": 12,
+  "unet_base_channels": 16,
+  "adapter_channels": 16,
+  "epsilon": 0.1,
+  "optimizer": "Adam",
+  "learning_rate": 0.001,
+  "boundary_weight": 0.1,
+  "correction_weight": 0.05,
+  "augmentation": "none_technical_pilot",
+  "checkpoint_rule": "lowest_dev_loss_first_tie",
+  "precision": "float32",
+  "torch_threads": 4,
+  "bootstrap_or_hypothesis_testing": false,
+  "external_test_access": false,
+  "neighbor_policy": "two_nearest_distinct_valid_frames_chronological_order",
+  "normalization": "shared_central_frame_percentiles_1_99_clip_0_1",
+  "alignment": {
+    "method": "OpenCV_Farneback",
+    "pyr_scale": 0.5,
+    "levels": 3,
+    "winsize": 15,
+    "iterations": 3,
+    "poly_n": 5,
+    "poly_sigma": 1.2,
+    "fb_sigma_px": 1.5,
+    "photometric_sigma": 0.1
+  }
+}

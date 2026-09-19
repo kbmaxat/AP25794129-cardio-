@@ -1,0 +1,83 @@
+{
+  "first_run": "pilot_20260919T131843Z_0ec002",
+  "replay_run": "pilot_20260919T131935Z_66f906",
+  "checks": [
+    {
+      "artifact": "patient_split.json",
+      "identical": true
+    },
+    {
+      "artifact": "data_manifest.json",
+      "identical": true
+    },
+    {
+      "artifact": "protocol.json",
+      "identical": true
+    },
+    {
+      "artifact": "none/history.csv",
+      "identical": true
+    },
+    {
+      "artifact": "none/dev_phase_metrics.csv",
+      "identical": true
+    },
+    {
+      "artifact": "none/dev_patient_metrics.csv",
+      "identical": true
+    },
+    {
+      "artifact": "none/best.pt",
+      "identical": true
+    },
+    {
+      "artifact": "direct_temporal/history.csv",
+      "identical": true
+    },
+    {
+      "artifact": "direct_temporal/dev_phase_metrics.csv",
+      "identical": true
+    },
+    {
+      "artifact": "direct_temporal/dev_patient_metrics.csv",
+      "identical": true
+    },
+    {
+      "artifact": "direct_temporal/best.pt",
+      "identical": true
+    },
+    {
+      "artifact": "spatial/history.csv",
+      "identical": true
+    },
+    {
+      "artifact": "spatial/dev_phase_metrics.csv",
+      "identical": true
+    },
+    {
+      "artifact": "spatial/dev_patient_metrics.csv",
+      "identical": true
+    },
+    {
+      "artifact": "spatial/best.pt",
+      "identical": true
+    },
+    {
+      "artifact": "temporal/history.csv",
+      "identical": true
+    },
+    {
+      "artifact": "temporal/dev_phase_metrics.csv",
+      "identical": true
+    },
+    {
+      "artifact": "temporal/dev_patient_metrics.csv",
+      "identical": true
+    },
+    {
+      "artifact": "temporal/best.pt",
+      "identical": true
+    }
+  ],
+  "all_identical": true
+}
