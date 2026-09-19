@@ -1,0 +1,24 @@
+Python 3.12; NVIDIA CUDA-capable GPU.
+
+python -m venv .venv
+.venv\Scripts\python.exe -m pip install torch==2.11.0+cu128 --index-url https://download.pytorch.org/whl/cu128
+.venv\Scripts\python.exe -m pip install -r research/temporal_v01/requirements.txt
+.venv\Scripts\python.exe -m pytest ap25794129-cardio-preprocessing/tests/test_research_temporal.py ap25794129-cardio-preprocessing/tests/test_temporal_export.py -q
+.venv\Scripts\python.exe research/temporal_v01/run_pilot.py --data-root PATH_TO_CAMUS_FULL
+
+Dataset layout:
+PATH_TO_CAMUS_FULL/database_split/subgroup_training.txt
+PATH_TO_CAMUS_FULL/database_split/subgroup_validation.txt
+PATH_TO_CAMUS_FULL/database_split/subgroup_testing.txt
+PATH_TO_CAMUS_FULL/database_nifti/patientXXXX/Info_4CH.cfg
+PATH_TO_CAMUS_FULL/database_nifti/patientXXXX/patientXXXX_4CH_half_sequence.nii.gz
+PATH_TO_CAMUS_FULL/database_nifti/patientXXXX/patientXXXX_4CH_ED.nii.gz
+PATH_TO_CAMUS_FULL/database_nifti/patientXXXX/patientXXXX_4CH_ES.nii.gz
+PATH_TO_CAMUS_FULL/database_nifti/patientXXXX/patientXXXX_4CH_ED_gt.nii.gz
+PATH_TO_CAMUS_FULL/database_nifti/patientXXXX/patientXXXX_4CH_ES_gt.nii.gz
+
+Numeric export after replay (run folders must be different):
+.venv\Scripts\python.exe research/temporal_v01/export_pilot.py FIRST_RUN_FOLDER --replay SECOND_RUN_FOLDER --github-code-commit CODE_COMMIT_SHA
+
+Tracked: code, configuration, public_results/*.json and *.csv.
+Local only: runs, private, events.jsonl, Markdown protocol/journal/drafts.
