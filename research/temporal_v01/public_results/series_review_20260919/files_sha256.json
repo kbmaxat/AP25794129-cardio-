@@ -1,0 +1,6 @@
+{
+  "existing_holdout_metrics.csv": "2dfa22f1346bf131a16abc0285acd25883db1109bc000604fbdb9d710dc0093c",
+  "source_hashes.json": "4a11e3dcc1191bae7eec21726f7aa4f11196b3d1a42c1ca83a0bbbd701cdb8e3",
+  "spatial_50epoch_aggregate.json": "551f9255775d07371f4ce24b4adfa1731a9d19aecab20aa42569d1d76ac8fe27",
+  "spatial_50epoch_seed_metrics.csv": "ef43d4de330ee40aab671e15d79813bf8a9d3fddc9c83e3e20014e05bd22bc87"
+}
