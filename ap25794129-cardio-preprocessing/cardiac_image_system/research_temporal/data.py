@@ -7,6 +7,10 @@ import cv2
 import nibabel as nib
 import numpy as np
 
+from cardiac_image_system.research_temporal.geometry import (
+    apply_letterbox,
+    compute_letterbox_transform,
+)
 
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
@@ -119,16 +123,37 @@ def load_cases(root: Path, patients: list[str], config: dict):
                 raise ValueError(f"Constant image {patient}/{phase}")
             size = config["image_size"]
             raw = []
+            geometry_mode = config.get("geometry_mode", "squash")
+            if geometry_mode not in {"squash", "letterbox"}:
+                raise ValueError(f"Unknown geometry_mode: {geometry_mode}")
+            transform = compute_letterbox_transform(image.shape, size)
             for index in [center_idx, *near]:
                 normalized = np.clip((sequence[..., index] - lo) / (hi - lo), 0, 1)
-                raw.append(cv2.resize(normalized, (size, size), interpolation=cv2.INTER_AREA))
+                if geometry_mode == "letterbox":
+                    raw.append(apply_letterbox(normalized, transform, cv2.INTER_AREA))
+                else:
+                    raw.append(cv2.resize(normalized, (size, size), interpolation=cv2.INTER_AREA))
             raw = np.stack(raw).astype(np.float32)
             aligned, confidence = zip(*(align_neighbor(raw[0], n, config) for n in raw[1:]))
-            resized_mask = cv2.resize(target, (size, size), interpolation=cv2.INTER_NEAREST)[None]
+            if geometry_mode == "letterbox":
+                resized_mask = apply_letterbox(target, transform, cv2.INTER_NEAREST)[None]
+            else:
+                resized_mask = cv2.resize(target, (size, size), interpolation=cv2.INTER_NEAREST)[None]
             samples.append({
                 "raw": raw, "aligned": np.stack(aligned), "confidence": np.stack(confidence),
                 "time_offsets": np.array([(i - center_idx) / fps for i in near], dtype=np.float32),
-                "mask": resized_mask.astype(np.float32), "patient": patient, "phase": phase,
+                "mask": resized_mask.astype(np.float32), "native_mask": target.astype(np.float32),
+                "geometry_scale": np.float32(transform.scale),
+                "geometry_pad_top": np.int64(transform.pad_top if geometry_mode == "letterbox" else 0),
+                "geometry_pad_left": np.int64(transform.pad_left if geometry_mode == "letterbox" else 0),
+                "geometry_resized_height": np.int64(
+                    int(round(image.shape[0] * transform.scale)) if geometry_mode == "letterbox" else size
+                ),
+                "geometry_resized_width": np.int64(
+                    int(round(image.shape[1] * transform.scale)) if geometry_mode == "letterbox" else size
+                ),
+                "native_height": np.int64(image.shape[0]), "native_width": np.int64(image.shape[1]),
+                "patient": patient, "phase": phase,
             })
             for path in (image_path, mask_path):
                 file_hashes[str(path)] = sha256(path)
