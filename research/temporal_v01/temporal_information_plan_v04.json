@@ -1,0 +1,33 @@
+{
+  "experiment_id": "CARDIO-TEMPORAL-001-v0.4",
+  "stage": "development_exploratory",
+  "dataset": "CAMUS",
+  "eligible_partition": "training",
+  "view": "4CH",
+  "phases": ["ED", "ES"],
+  "target_label": 1,
+  "train_patients": 320,
+  "dev_patients": 80,
+  "split_seed": 20260919,
+  "training_seeds": [2027, 2028, 2029, 2030, 2031, 2032],
+  "arms": ["temporal_factual", "temporal_neutral", "spatial", "identity"],
+  "temporal_neutralization": "confidence_zero_for_all_train_and_dev_samples",
+  "counterfactual_evaluation": "same_factual_temporal_checkpoint_on_dev_with_measured_vs_zero_confidence",
+  "epochs": 50,
+  "image_size": 128,
+  "batch_size": 8,
+  "checkpoint_selection": "minimum_dev_loss_first_tie",
+  "metrics_grid": "native_pixels",
+  "primary_contrast": "temporal_factual_minus_temporal_neutral_patient_mean_dice",
+  "minimum_useful_benefit": {
+    "dice_increase": 0.01,
+    "mean_surface_distance_reduction_pixels": 0.5
+  },
+  "maximum_acceptable_harm": {
+    "mean_surface_distance_increase_pixels": 0.5,
+    "relative_area_error_increase_absolute": 0.01
+  },
+  "test_access": false,
+  "hypothesis_tests": false,
+  "p_values_computed": false
+}

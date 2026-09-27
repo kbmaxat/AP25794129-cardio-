@@ -207,6 +207,7 @@ def train_mode(mode, train, dev, config, run, baseline_state, device):
     output.mkdir()
     seed_everything(config["training_seed"])
     model = TemporalSystem(mode, config)
+    initial_model_hash = state_hash(model)
     state = model.segmenter.state_dict()
     for key, tensor in baseline_state.items():
         if tensor.shape == state[key].shape:
@@ -270,6 +271,7 @@ def train_mode(mode, train, dev, config, run, baseline_state, device):
         "preprocessor_parameters": sum(p.numel() for p in model.preprocessor.parameters()) if model.preprocessor else 0,
         "mean_abs_correction": float(np.mean([row["mean_abs_correction"] for row in rows])),
         "max_abs_correction": max(row["max_abs_correction"] for row in rows),
+        "initial_model_sha256": initial_model_hash,
         "initial_segmenter_sha256": initial_hash, "checkpoint_sha256": sha256(output / "best.pt"),
     }
     if summary["max_abs_correction"] > config["epsilon"] + 1e-6:
@@ -368,7 +370,12 @@ def main():
         write_json(run / "status.json", {"status": "completed", "utc": now(), "seconds": time.perf_counter() - started, "claim": "technical feasibility only", "environment": env})
         with (HERE / "ЖУРНАЛ_ИССЛЕДОВАНИЯ.md").open("a", encoding="utf-8") as journal:
             journal.write(f"\n## {now()} Завершен технический пилот {run_id}\n\n")
-            journal.write("CAMUS training only; n_train=32, n_dev=8; checkpoint selection: dev loss.\n\n")
+            journal.write(
+                f"CAMUS training only; n_train={len(selected['train'])}, "
+                f"n_dev={len(selected['dev'])}; geometry={config.get('geometry_mode', 'squash')}; "
+                f"confidence_ablation={config.get('confidence_ablation', 'measured')}; "
+                "checkpoint selection: dev loss.\n\n"
+            )
             for item in summaries:
                 journal.write(f"- {item['mode']}: Dice dev {item['dev_patient_dice']:.4f}; эпоха {item['best_epoch']}; обучение {item['training_seconds']:.1f} с; максимальная поправка {item['max_abs_correction']:.5f}.\n")
             journal.write(f"\nАртефакты: runs/{run_id}. Конфигурация, данные, код и окружение зафиксированы контрольными суммами.\n")
