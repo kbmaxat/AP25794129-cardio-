@@ -1,0 +1,27 @@
+{
+  "stage": "development_exploratory",
+  "n_unique_dev_patients": 8,
+  "n_splits": 1,
+  "n_seeds": 6,
+  "test_access": false,
+  "delta_definition": "letterbox_minus_squash",
+  "p_values_computed": false,
+  "metrics": {
+    "dice": {
+      "mean_delta": 0.009668088364402916,
+      "sd_across_seeds_ddof1": 0.023098536472336468
+    },
+    "relative_area_error": {
+      "mean_delta": -0.03140131969298949,
+      "sd_across_seeds_ddof1": 0.05572691823422423
+    },
+    "mean_surface_distance_px": {
+      "mean_delta": -1.276374305287997,
+      "sd_across_seeds_ddof1": 2.41840677220823
+    },
+    "hausdorff_distance_px": {
+      "mean_delta": -2.2286952833334603,
+      "sd_across_seeds_ddof1": 15.926805042138373
+    }
+  }
+}

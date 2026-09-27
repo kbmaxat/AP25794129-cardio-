@@ -1,0 +1,86 @@
+{
+  "pilot_20260927T084533Z_bcaee6": {
+    "protocol_sha256": "6ba0e73380f9bf69e83297a31b0ccf022f5b84522b2bbe0f223c4502f1612920",
+    "phase_metrics_sha256": "4666ceaf2e499bedad0282824d070b7384458db179a8762015139da9651246db",
+    "source_tree_sha256": "04f6340dfb0be6d34217e76ce769c6d7ab85fb45ef52c2d0260921396eb29b5a",
+    "initial_segmenter_sha256": "3624204f48a97d6b3b9a99ff09986224550a3b23bd57a5b9b0ba46a577102d94",
+    "patient_split_sha256": "416e06e4beaf975b70a1945a0b1a806bc1a02fd2e016eb8c7ae152fec7be4413"
+  },
+  "pilot_20260927T084618Z_c84a3e": {
+    "protocol_sha256": "30b108a003d479c66fb65ca8aa474702d0f525668874b4f81a467f2076a1346a",
+    "phase_metrics_sha256": "069504d0927e31b000d66da86a813b98c68df05349788af3eac9f23ac6fb2c00",
+    "source_tree_sha256": "652eb7a23c1cf895dd12dd5e2253006cb894cb8ea0235f06dad2bd033d960de6",
+    "initial_segmenter_sha256": "3624204f48a97d6b3b9a99ff09986224550a3b23bd57a5b9b0ba46a577102d94",
+    "patient_split_sha256": "416e06e4beaf975b70a1945a0b1a806bc1a02fd2e016eb8c7ae152fec7be4413"
+  },
+  "pilot_20260927T084702Z_01d9b1": {
+    "protocol_sha256": "f1814859f6227633de08f4d27c4b27d495732b19775e90904c2194690ac73a3b",
+    "phase_metrics_sha256": "fd77bb02f70fc72f887c79a5eb475d5a6c023be63a6e479bb94a5ffe7ffa6e10",
+    "source_tree_sha256": "e9689538664a1de078543afb9d75a2e6b2afc72e2c7a7d77eef98ed127d5442f",
+    "initial_segmenter_sha256": "67bcb6d1228215025da8a6366b1b7a0851b54a4519ab746c15eafaba49d833b2",
+    "patient_split_sha256": "416e06e4beaf975b70a1945a0b1a806bc1a02fd2e016eb8c7ae152fec7be4413"
+  },
+  "pilot_20260927T084746Z_61574e": {
+    "protocol_sha256": "f174bb4792a615a6bb8f49b5a3eaab1694769ab290ada2f8318afb8f380d2487",
+    "phase_metrics_sha256": "cd75e19c490e79e9f3dafdf660b23e0d7ee47418b15c487ee7a60779a2f88051",
+    "source_tree_sha256": "d200753424a3efb1bfbd3fd5e7a98f1254f51b0671d7f71674431e935bdcc6e4",
+    "initial_segmenter_sha256": "67bcb6d1228215025da8a6366b1b7a0851b54a4519ab746c15eafaba49d833b2",
+    "patient_split_sha256": "416e06e4beaf975b70a1945a0b1a806bc1a02fd2e016eb8c7ae152fec7be4413"
+  },
+  "pilot_20260927T084828Z_bff8c6": {
+    "protocol_sha256": "a29a72a8ee73622bde1bdcaa9cfcee889180e7db24a6d099efe69a52680a4983",
+    "phase_metrics_sha256": "77b71d2cb3c52b3e251ebcaa9a40ba579af22960a4fc936b168a3f8c2e8aaa8d",
+    "source_tree_sha256": "4130d0a80298515cfff581ab50dd7cb38920a2eccee97e98075b481715ff8377",
+    "initial_segmenter_sha256": "26c77552db6c487d3393ad36764c8c84eb69afe06914119c56f86067850dfe29",
+    "patient_split_sha256": "416e06e4beaf975b70a1945a0b1a806bc1a02fd2e016eb8c7ae152fec7be4413"
+  },
+  "pilot_20260927T084908Z_999bfc": {
+    "protocol_sha256": "6d5fa723e8ae697f9856204ca371ba7ae4bfa4e9a4e090f213a09dc49ce7db2e",
+    "phase_metrics_sha256": "a3cc6908904b2027ab882181cf024276ed92b032bd38916e3d7cbc62f9dc481c",
+    "source_tree_sha256": "d88a4b07120a8152083f9b2051e7c3a01fda3beecbb349b87cd292ce3e232627",
+    "initial_segmenter_sha256": "26c77552db6c487d3393ad36764c8c84eb69afe06914119c56f86067850dfe29",
+    "patient_split_sha256": "416e06e4beaf975b70a1945a0b1a806bc1a02fd2e016eb8c7ae152fec7be4413"
+  },
+  "pilot_20260927T084948Z_852913": {
+    "protocol_sha256": "8d6ebb9720bf7f4b4bc653ec033c806dd4df1e93915362ff9a2a51ecd12f36af",
+    "phase_metrics_sha256": "0c09399232dc32f2c15d4c14eb5cade04dd0e7eb4965c0be02514a15c3e37fa5",
+    "source_tree_sha256": "fc41fb5b17be271e835fbf698ca1bf1aca58e86ef397d98086ed0b38dac2b601",
+    "initial_segmenter_sha256": "08676b7434ccbdd31918062ed744ada4094af42299b4d968abd1f16feaef35ca",
+    "patient_split_sha256": "416e06e4beaf975b70a1945a0b1a806bc1a02fd2e016eb8c7ae152fec7be4413"
+  },
+  "pilot_20260927T085027Z_cec43a": {
+    "protocol_sha256": "ff3a95ba90f7d3d14a1ddc079ec05d3b9bceb5aa23713b3fc411d318a390866b",
+    "phase_metrics_sha256": "a2a9c224e2519ee981b32441f89a017e432915ae37a7bc1b1b63c1e952285f5a",
+    "source_tree_sha256": "b54428ea30c28876fdbaba143ed76d63f5e6a81b92b4fa3d1d97762a4277502a",
+    "initial_segmenter_sha256": "08676b7434ccbdd31918062ed744ada4094af42299b4d968abd1f16feaef35ca",
+    "patient_split_sha256": "416e06e4beaf975b70a1945a0b1a806bc1a02fd2e016eb8c7ae152fec7be4413"
+  },
+  "pilot_20260927T085107Z_595954": {
+    "protocol_sha256": "d9626c99e1bb26922a3f1590f476a7c008c4c0bd1a8e4f99d85793e2b6952ae1",
+    "phase_metrics_sha256": "eef6e6a31faf43a134106491d7a7f7d7a85e9071a7880095afa3be0150da874a",
+    "source_tree_sha256": "51360391877e13e5ecf8ef933e67494b3eb7217cb37beb969d568d8101612574",
+    "initial_segmenter_sha256": "06c8e6b1d5968f3a7ad0feeee16826e63026e83cb93287df756fb16310db4b2f",
+    "patient_split_sha256": "416e06e4beaf975b70a1945a0b1a806bc1a02fd2e016eb8c7ae152fec7be4413"
+  },
+  "pilot_20260927T085146Z_a4777f": {
+    "protocol_sha256": "55a922dd3f576daac1f10ff99b06b0708b03589ddcceb84e3f70dae469e83807",
+    "phase_metrics_sha256": "f0986c60877e104feb5f8ce975de3166c8b7db8ee41cefa7fe9271ab7266e6b0",
+    "source_tree_sha256": "1470a45aae8c91d7285a59adc01ef4249e84b0b1b5aa31138dbf017dafe02fa4",
+    "initial_segmenter_sha256": "06c8e6b1d5968f3a7ad0feeee16826e63026e83cb93287df756fb16310db4b2f",
+    "patient_split_sha256": "416e06e4beaf975b70a1945a0b1a806bc1a02fd2e016eb8c7ae152fec7be4413"
+  },
+  "pilot_20260927T085225Z_d1da61": {
+    "protocol_sha256": "975e9d9dd63ae9060334eb612f6ed3029f043aba9b19dcaba63848d2d763e1a3",
+    "phase_metrics_sha256": "19dea6b35acdb35179b1f3822c05f55cdb4681a67b38bd7ab2aa1ba4e719ae06",
+    "source_tree_sha256": "87345bf52b9bc3204dd29cb9dfbdfda8e3f0b07ecc9a5fcc1c514c61820c7d83",
+    "initial_segmenter_sha256": "0a397708ac217ecb9773e843161f9307e63ea552b5d56bdc4ef152e128546df0",
+    "patient_split_sha256": "416e06e4beaf975b70a1945a0b1a806bc1a02fd2e016eb8c7ae152fec7be4413"
+  },
+  "pilot_20260927T085304Z_991b7e": {
+    "protocol_sha256": "3ba181cc71a1696090481ec12ccdda3b9d49f6f22ecfd45f0638e1aecce01100",
+    "phase_metrics_sha256": "9726b0afe1bbe66e99ef642ee5d092e9ed129fcc3d48913e310a87291097b16c",
+    "source_tree_sha256": "dead0c1317b6925f5c3bcaaff9429b0ef896de8b4c1717a446fd94099aca0ec0",
+    "initial_segmenter_sha256": "0a397708ac217ecb9773e843161f9307e63ea552b5d56bdc4ef152e128546df0",
+    "patient_split_sha256": "416e06e4beaf975b70a1945a0b1a806bc1a02fd2e016eb8c7ae152fec7be4413"
+  }
+}
