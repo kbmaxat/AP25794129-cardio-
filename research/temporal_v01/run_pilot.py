@@ -84,6 +84,52 @@ def forward_batch(model, batch, device):
     return model(*inputs)
 
 
+def collate_samples(batch):
+    """Stack model inputs while retaining variable-size native masks for native metrics."""
+    stacked = {}
+    for key in ("raw", "aligned", "confidence", "time_offsets", "mask"):
+        stacked[key] = torch.utils.data.default_collate([item[key] for item in batch])
+    for key in ("native_mask", "patient", "phase"):
+        stacked[key] = [item[key] for item in batch]
+    for key in (
+        "geometry_scale", "geometry_pad_top", "geometry_pad_left",
+        "geometry_resized_height", "geometry_resized_width", "native_height", "native_width",
+    ):
+        stacked[key] = torch.utils.data.default_collate([item[key] for item in batch])
+    return stacked
+
+
+def native_prediction(probability, batch, index):
+    """Map a padded/square prediction back to its native pixel grid."""
+    padded = probability[index]
+    top = int(batch["geometry_pad_top"][index])
+    left = int(batch["geometry_pad_left"][index])
+    height = int(batch["geometry_resized_height"][index])
+    width = int(batch["geometry_resized_width"][index])
+    native_height = int(batch["native_height"][index])
+    native_width = int(batch["native_width"][index])
+    content = padded[top:top + height, left:left + width]
+    return cv2.resize(content, (native_width, native_height), interpolation=cv2.INTER_LINEAR)
+
+
+def boundary_distances(prediction, target):
+    """Return symmetric mean and Hausdorff boundary distances in native pixels."""
+    kernel = np.ones((3, 3), dtype=np.uint8)
+    pred_boundary = cv2.morphologyEx(prediction.astype(np.uint8), cv2.MORPH_GRADIENT, kernel) > 0
+    target_boundary = cv2.morphologyEx(target.astype(np.uint8), cv2.MORPH_GRADIENT, kernel) > 0
+    if not target_boundary.any():
+        raise ValueError("Boundary metric requires a non-empty target")
+    if not pred_boundary.any():
+        penalty = float(np.hypot(*prediction.shape))
+        return penalty, penalty
+    pred_distance = cv2.distanceTransform((~pred_boundary).astype(np.uint8), cv2.DIST_L2, 3)
+    target_distance = cv2.distanceTransform((~target_boundary).astype(np.uint8), cv2.DIST_L2, 3)
+    forward = target_distance[pred_boundary]
+    backward = pred_distance[target_boundary]
+    distances = np.concatenate([forward, backward])
+    return float(distances.mean()), float(distances.max())
+
+
 def evaluate(model, loader, config, device):
     model.eval()
     losses, rows = [], []
@@ -95,14 +141,18 @@ def evaluate(model, loader, config, device):
             if not torch.isfinite(loss):
                 raise FloatingPointError("Nonfinite dev loss")
             losses.extend([float(loss)] * len(target))
-            pred = (logits.sigmoid() >= 0.5).float()
-            dims = (1, 2, 3)
-            dice = (2 * (pred * target).sum(dims) + 1e-6) / (pred.sum(dims) + target.sum(dims) + 1e-6)
-            area_error = (pred.sum(dims) - target.sum(dims)).abs() / target.sum(dims).clamp_min(1)
             for i in range(len(target)):
+                native_pred = native_prediction(logits[:, 0].sigmoid().cpu().numpy(), batch, i) >= 0.5
+                native_target = np.asarray(batch["native_mask"][i], dtype=bool)
+                intersection = np.logical_and(native_pred, native_target).sum()
+                dice = (2 * intersection + 1e-6) / (native_pred.sum() + native_target.sum() + 1e-6)
+                area_error = abs(native_pred.sum() - native_target.sum()) / max(native_target.sum(), 1)
+                mean_surface_distance, hausdorff_distance = boundary_distances(native_pred, native_target)
                 rows.append({
                     "patient": batch["patient"][i], "phase": batch["phase"][i],
-                    "dice": float(dice[i]), "relative_area_error": float(area_error[i]),
+                    "dice": float(dice), "relative_area_error": float(area_error),
+                    "mean_surface_distance_px": mean_surface_distance,
+                    "hausdorff_distance_px": hausdorff_distance,
                     "mean_abs_correction": float(change[i].abs().mean()),
                     "max_abs_correction": float(change[i].abs().max()),
                 })
@@ -169,8 +219,8 @@ def train_mode(mode, train, dev, config, run, baseline_state, device):
     initial_hash = state_hash(model.segmenter)
     model.to(device)
     generator = torch.Generator().manual_seed(config["training_seed"])
-    train_loader = DataLoader(train, batch_size=config["batch_size"], shuffle=True, generator=generator, num_workers=0)
-    dev_loader = DataLoader(dev, batch_size=config["batch_size"], shuffle=False, num_workers=0)
+    train_loader = DataLoader(train, batch_size=config["batch_size"], shuffle=True, generator=generator, num_workers=0, collate_fn=collate_samples)
+    dev_loader = DataLoader(dev, batch_size=config["batch_size"], shuffle=False, num_workers=0, collate_fn=collate_samples)
     optimizer = torch.optim.Adam(model.parameters(), lr=config["learning_rate"])
     best, best_epoch = float("inf"), None
     history = []
@@ -208,7 +258,7 @@ def train_mode(mode, train, dev, config, run, baseline_state, device):
     dev_loss, rows, patients = evaluate(model, dev_loader, config, device)
     write_csv(output / "dev_phase_metrics.csv", rows)
     write_csv(output / "dev_patient_metrics.csv", [{"patient": p, "dice": d} for p, d in patients.items()])
-    sample = next(iter(DataLoader(dev[:1], batch_size=1)))
+    sample = next(iter(DataLoader(dev[:1], batch_size=1, collate_fn=collate_samples)))
     with torch.no_grad():
         logits, processed, change = forward_batch(model, sample, device)
     np.savez_compressed(output / "fixed_dev_example.npz", raw=sample["raw"][0].numpy(), aligned=sample["aligned"][0].numpy(), confidence=sample["confidence"][0].numpy(), mask=sample["mask"][0, 0].numpy(), processed=processed[0, 0].cpu().numpy(), correction=change[0, 0].cpu().numpy(), prediction=(logits[0, 0].sigmoid() >= 0.5).cpu().numpy())
@@ -241,6 +291,7 @@ def main():
     parser.add_argument("--epsilon", type=float)
     parser.add_argument("--correction-weight", type=float)
     parser.add_argument("--confidence-ablation", choices=("measured", "ones", "zeros"))
+    parser.add_argument("--geometry-mode", choices=("squash", "letterbox"))
     args = parser.parse_args()
     config = json.loads(args.config.read_text(encoding="utf-8"))
     if args.data_root is not None:
@@ -263,6 +314,8 @@ def main():
         config["correction_weight"] = args.correction_weight
     if args.confidence_ablation is not None:
         config["confidence_ablation"] = args.confidence_ablation
+    if args.geometry_mode is not None:
+        config["geometry_mode"] = args.geometry_mode
     if not config["dataset_root"]:
         parser.error("Provide --data-root or CAMUS_ROOT")
     if config["stage"] != "technical_pilot" or config["bootstrap_or_hypothesis_testing"]:
