@@ -286,6 +286,8 @@ def main():
     parser.add_argument("--config", type=Path, default=HERE / "protocol_v01.json")
     parser.add_argument("--data-root", type=Path, default=os.environ.get("CAMUS_ROOT"))
     parser.add_argument("--training-seed", type=int)
+    parser.add_argument("--train-patients", type=int)
+    parser.add_argument("--dev-patients", type=int)
     parser.add_argument("--epochs", type=int)
     parser.add_argument("--modes", nargs="+", choices=MODES)
     parser.add_argument("--epsilon", type=float)
@@ -298,6 +300,14 @@ def main():
         config["dataset_root"] = str(args.data_root.resolve())
     if args.training_seed is not None:
         config["training_seed"] = args.training_seed
+    if args.train_patients is not None:
+        if args.train_patients < 1:
+            parser.error("--train-patients must be positive")
+        config["train_patients"] = args.train_patients
+    if args.dev_patients is not None:
+        if args.dev_patients < 1:
+            parser.error("--dev-patients must be positive")
+        config["dev_patients"] = args.dev_patients
     if args.epochs is not None:
         if args.epochs < 1:
             parser.error("--epochs must be positive")

@@ -1,0 +1,26 @@
+{
+  "experiment_id": "GEOMETRY-EXPANDED-20260927",
+  "stage": "development_exploratory",
+  "seeds": [
+    2027,
+    2028,
+    2029,
+    2030,
+    2031,
+    2032
+  ],
+  "geometries": [
+    "squash",
+    "letterbox"
+  ],
+  "epochs": 50,
+  "train_patients": 320,
+  "dev_patients": 80,
+  "split_seed": 20260919,
+  "image_size": 128,
+  "checkpoint_selection": "minimum_dev_loss_first_tie",
+  "metrics_grid": "native_pixels",
+  "test_access": false,
+  "hypothesis_tests": false,
+  "retrain_all_seeds_from_same_initialization_per_pair": true
+}

@@ -58,11 +58,14 @@ def roundtrip(root, patients, size):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--data-root", type=Path, required=True)
+    parser.add_argument("--plan", type=Path, default=HERE / "geometry_check_plan.json")
     args = parser.parse_args()
-    plan = read_json(HERE / "geometry_check_plan.json")
+    plan = read_json(args.plan)
     baseline = read_json(HERE / "protocol_v01.json")
-    for key in ("train_patients", "dev_patients", "split_seed", "image_size"):
+    for key in ("split_seed", "image_size"):
         assert baseline[key] == plan[key], key
+    baseline["train_patients"] = plan["train_patients"]
+    baseline["dev_patients"] = plan["dev_patients"]
     stamp = datetime.now(timezone.utc).strftime("geometry_check_%Y%m%dT%H%M%SZ")
     folder = HERE / "private" / stamp
     folder.mkdir(parents=True, exist_ok=False)
@@ -88,6 +91,8 @@ def main():
             for geometry in plan["geometries"]:
                 command = [sys.executable, str(HERE / "run_pilot.py"), "--data-root", str(args.data_root),
                            "--training-seed", str(seed), "--epochs", str(plan["epochs"]),
+                           "--train-patients", str(plan["train_patients"]),
+                           "--dev-patients", str(plan["dev_patients"]),
                            "--modes", "none", "--geometry-mode", geometry]
                 env = {**os.environ, "PYTHONIOENCODING": "utf-8", "PYTHONUTF8": "1"}
                 completed = subprocess.run(command, cwd=ROOT, env=env, text=True, encoding="utf-8",
