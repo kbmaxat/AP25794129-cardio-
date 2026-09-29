@@ -1,0 +1,42 @@
+{
+  "experiment_id": "CARDIO-TEMPORAL-003-v0.1",
+  "stage": "development_exploratory_follow_up",
+  "baseline_results_previously_inspected": true,
+  "dataset": "CAMUS",
+  "eligible_partition": "official_training",
+  "view": "4CH",
+  "phases": ["ED", "ES"],
+  "train_patients": 320,
+  "dev_patients": 80,
+  "split_seed": 20260919,
+  "training_seeds": [2027, 2028, 2029, 2030, 2031, 2032],
+  "arms": {
+    "reference": "temporal_factual_correction_weight_0.05_existing_v04_runs",
+    "ablation": "temporal_correction_weight_0.0_new_matched_runs"
+  },
+  "epochs": 50,
+  "image_size": 128,
+  "batch_size": 8,
+  "checkpoint_selection": "minimum_dev_loss_first_tie",
+  "primary_contrast": "standard_penalty_minus_no_correction_penalty",
+  "metrics": [
+    "native_coordinate_dice",
+    "mean_surface_distance_px",
+    "relative_area_error",
+    "hausdorff_distance_px",
+    "mean_abs_correction",
+    "max_abs_correction"
+  ],
+  "minimum_useful_benefit_reference": {
+    "dice_increase": 0.01,
+    "mean_surface_distance_reduction_pixels": 0.5
+  },
+  "guardrails_reference": {
+    "mean_surface_distance_increase_pixels": 0.5,
+    "relative_area_error_increase_absolute": 0.01
+  },
+  "uncertainty": "crossed_patient_seed_bootstrap_95_ci",
+  "hypothesis_tests": false,
+  "p_values_computed": false,
+  "test_access": false
+}

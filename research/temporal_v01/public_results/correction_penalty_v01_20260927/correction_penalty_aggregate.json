@@ -1,0 +1,215 @@
+{
+  "experiment_id": "CARDIO-TEMPORAL-003-v0.1",
+  "stage": "development_exploratory_follow_up",
+  "baseline_results_previously_inspected": true,
+  "n_unique_dev_patients": 80,
+  "n_seeds": 6,
+  "test_access": false,
+  "p_values_computed": false,
+  "contrast": "standard_penalty_minus_no_correction_penalty",
+  "minimum_useful_benefit_reference": {
+    "dice_increase": 0.01,
+    "mean_surface_distance_reduction_pixels": 0.5
+  },
+  "guardrails_reference": {
+    "mean_surface_distance_increase_pixels": 0.5,
+    "relative_area_error_increase_absolute": 0.01
+  },
+  "condition_means": {
+    "no_correction_penalty": {
+      "dice": {
+        "mean": 0.9272247650159763,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          0.9214412619668831,
+          0.9327552586574884
+        ]
+      },
+      "relative_area_error": {
+        "mean": 0.08980727199540389,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          0.07888325744379329,
+          0.10128756782004127
+        ]
+      },
+      "mean_surface_distance_px": {
+        "mean": 4.7785361668715876,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          4.398820073520764,
+          5.17019813664568
+        ]
+      },
+      "hausdorff_distance_px": {
+        "mean": 16.547539730370044,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          15.533557760566474,
+          17.59093008591483
+        ]
+      },
+      "mean_abs_correction": {
+        "mean": 0.04565701635328878,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          0.02239516558672828,
+          0.07015261769808906
+        ]
+      },
+      "max_abs_correction": {
+        "mean": 0.07449045881706601,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          0.047415903733635786,
+          0.09738215825675677
+        ]
+      }
+    },
+    "standard_penalty": {
+      "dice": {
+        "mean": 0.9262466747952439,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          0.9203018657113455,
+          0.932126597396301
+        ]
+      },
+      "relative_area_error": {
+        "mean": 0.08946632583472885,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          0.07908644650935442,
+          0.10032984471339906
+        ]
+      },
+      "mean_surface_distance_px": {
+        "mean": 4.852142092337211,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          4.444586345205704,
+          5.270911297705024
+        ]
+      },
+      "hausdorff_distance_px": {
+        "mean": 17.16321321129799,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          15.97140145972371,
+          18.453268295029797
+        ]
+      },
+      "mean_abs_correction": {
+        "mean": 0.0006483160340351902,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          6.0181636935124535e-05,
+          0.0015841400532202955
+        ]
+      },
+      "max_abs_correction": {
+        "mean": 0.010567539044010725,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          9.315395797860522e-05,
+          0.027901675454415152
+        ]
+      }
+    }
+  },
+  "paired_differences": {
+    "dice": {
+      "mean_delta": -0.0009780902207323122,
+      "crossed_patient_seed_bootstrap_95_ci": [
+        -0.003327268114134131,
+        0.0012143692024799606
+      ]
+    },
+    "relative_area_error": {
+      "mean_delta": -0.0003409461606750298,
+      "crossed_patient_seed_bootstrap_95_ci": [
+        -0.00628874875241648,
+        0.00534165953567652
+      ]
+    },
+    "mean_surface_distance_px": {
+      "mean_delta": 0.07360592546562354,
+      "crossed_patient_seed_bootstrap_95_ci": [
+        -0.10675998896981279,
+        0.2679669071423511
+      ]
+    },
+    "hausdorff_distance_px": {
+      "mean_delta": 0.6156734809279442,
+      "crossed_patient_seed_bootstrap_95_ci": [
+        -0.0192459305748343,
+        1.4309581119939687
+      ]
+    },
+    "mean_abs_correction": {
+      "mean_delta": -0.045008700319253594,
+      "crossed_patient_seed_bootstrap_95_ci": [
+        -0.069968466811986,
+        -0.02122748998179548
+      ]
+    },
+    "max_abs_correction": {
+      "mean_delta": -0.06392291977305528,
+      "crossed_patient_seed_bootstrap_95_ci": [
+        -0.09460203174156884,
+        -0.028622186080863223
+      ]
+    }
+  },
+  "source_runs": {
+    "2027": {
+      "baseline_run_id": "pilot_20260927T130508Z_53526f",
+      "baseline_checkpoint_sha256": "266fb82e2f9afcce8e636f6128d7a32a012004354c0e5e22264da4483d7d1258",
+      "baseline_initial_model_sha256": "05456fee62c0f3622d72874726a230063e80d36e73093ebf4a7010d22757741c",
+      "baseline_split_sha256": "5a7109a4667a64b34219d17818e298be1f3cd71cd6e0038123dc62fffa97a830",
+      "no_penalty_run_id": "pilot_20260927T172342Z_cea691",
+      "no_penalty_checkpoint_sha256": "835943fe6290798a2925643d769674a3c48043fddda15446f10398d31fb7c530",
+      "no_penalty_initial_model_sha256": "05456fee62c0f3622d72874726a230063e80d36e73093ebf4a7010d22757741c",
+      "no_penalty_split_sha256": "5a7109a4667a64b34219d17818e298be1f3cd71cd6e0038123dc62fffa97a830"
+    },
+    "2028": {
+      "baseline_run_id": "pilot_20260927T131958Z_93a141",
+      "baseline_checkpoint_sha256": "437e18a50e6b467985a29585bf7fa9821b9a9b288147214321f4767df962a65d",
+      "baseline_initial_model_sha256": "3d87a649716e2c6124f1e2dee24ed1da1ba103ee6bcbcf0da5d61fdf28d5dc60",
+      "baseline_split_sha256": "5a7109a4667a64b34219d17818e298be1f3cd71cd6e0038123dc62fffa97a830",
+      "no_penalty_run_id": "pilot_20260927T172909Z_db3021",
+      "no_penalty_checkpoint_sha256": "a2a8a1dbca7ceb95f5afcb267468ec123ece78cfaa458d5a7cfd686f4ce9873b",
+      "no_penalty_initial_model_sha256": "3d87a649716e2c6124f1e2dee24ed1da1ba103ee6bcbcf0da5d61fdf28d5dc60",
+      "no_penalty_split_sha256": "5a7109a4667a64b34219d17818e298be1f3cd71cd6e0038123dc62fffa97a830"
+    },
+    "2029": {
+      "baseline_run_id": "pilot_20260927T133413Z_f04829",
+      "baseline_checkpoint_sha256": "79abb44bd168d5b56d5dd4468dedbe9d75b589c775989feae8b8bade69e88290",
+      "baseline_initial_model_sha256": "f2ad2f278da050436e37956b5a6cc2734ccb3dab014d8a0da0a827250b9c5ec2",
+      "baseline_split_sha256": "5a7109a4667a64b34219d17818e298be1f3cd71cd6e0038123dc62fffa97a830",
+      "no_penalty_run_id": "pilot_20260927T173605Z_d7fd0f",
+      "no_penalty_checkpoint_sha256": "f2575bf146418375a421feb1bf4f9cee16268d86f7cf0a02e085bc46f83e796a",
+      "no_penalty_initial_model_sha256": "f2ad2f278da050436e37956b5a6cc2734ccb3dab014d8a0da0a827250b9c5ec2",
+      "no_penalty_split_sha256": "5a7109a4667a64b34219d17818e298be1f3cd71cd6e0038123dc62fffa97a830"
+    },
+    "2030": {
+      "baseline_run_id": "pilot_20260927T134905Z_9a40ce",
+      "baseline_checkpoint_sha256": "c5c1c10cb4f23844fd76dbc3d48bf81d8941e8a2dffee6280a3ec2bc1f0f5f4b",
+      "baseline_initial_model_sha256": "0ecb2a2eb6753e38b353fb6fe867e542297cc65a7b9881b4c663878bd4edd2ea",
+      "baseline_split_sha256": "5a7109a4667a64b34219d17818e298be1f3cd71cd6e0038123dc62fffa97a830",
+      "no_penalty_run_id": "pilot_20260927T174307Z_c6829d",
+      "no_penalty_checkpoint_sha256": "0f15e16aff6acb325f63d58500487c2dfba2b4ad3c71f0d003888b753a982cfa",
+      "no_penalty_initial_model_sha256": "0ecb2a2eb6753e38b353fb6fe867e542297cc65a7b9881b4c663878bd4edd2ea",
+      "no_penalty_split_sha256": "5a7109a4667a64b34219d17818e298be1f3cd71cd6e0038123dc62fffa97a830"
+    },
+    "2031": {
+      "baseline_run_id": "pilot_20260927T140920Z_ea8d50",
+      "baseline_checkpoint_sha256": "f5efab1182d81b678b712255dedbcf2feeb34d63e61822c0a05bcd0c6fc35e46",
+      "baseline_initial_model_sha256": "9152f3ad550144743879cf787a1799c4b4a75ae1f2ec0d793287eadf75990d63",
+      "baseline_split_sha256": "5a7109a4667a64b34219d17818e298be1f3cd71cd6e0038123dc62fffa97a830",
+      "no_penalty_run_id": "pilot_20260927T175021Z_933925",
+      "no_penalty_checkpoint_sha256": "8fda240e9c9bc293e11a2768aaa88ff4304a19e58f23d483975029f09f8f3273",
+      "no_penalty_initial_model_sha256": "9152f3ad550144743879cf787a1799c4b4a75ae1f2ec0d793287eadf75990d63",
+      "no_penalty_split_sha256": "5a7109a4667a64b34219d17818e298be1f3cd71cd6e0038123dc62fffa97a830"
+    },
+    "2032": {
+      "baseline_run_id": "pilot_20260927T143357Z_754ddb",
+      "baseline_checkpoint_sha256": "80092d84d59145f200bcea1f61831652d3cf7af7bb346762610acccd23b642b4",
+      "baseline_initial_model_sha256": "6417f19bf93003bf25eb7dea58197a963c6ad5a6652a5e48834dde6d232426b8",
+      "baseline_split_sha256": "5a7109a4667a64b34219d17818e298be1f3cd71cd6e0038123dc62fffa97a830",
+      "no_penalty_run_id": "pilot_20260927T175717Z_58f275",
+      "no_penalty_checkpoint_sha256": "a3b697bd8c50281a03c3597fd20f7a1862f9a14fe342fe1a135d52783c4fd341",
+      "no_penalty_initial_model_sha256": "6417f19bf93003bf25eb7dea58197a963c6ad5a6652a5e48834dde6d232426b8",
+      "no_penalty_split_sha256": "5a7109a4667a64b34219d17818e298be1f3cd71cd6e0038123dc62fffa97a830"
+    }
+  },
+  "patient_level_csv_sha256": "beb5193ad750c5c2c6ca7ce7a21ba609ee5f345505cdf10903852bf6f53c052b"
+}

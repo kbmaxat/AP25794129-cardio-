@@ -1,0 +1,10 @@
+{
+  "experiment_id": "CARDIO-TEMPORAL-003-v0.1",
+  "stage": "development_exploratory_follow_up",
+  "baseline_results_previously_inspected": true,
+  "plan_sha256": "cd1795ae88d67042a255c2f3edc3e3caed044bb0c7b0174c1f968732240f563f",
+  "private_metadata_sha256": "04fea1473f6b33c32bb6fdaf40a80e5b9727d6c25f29ffc792f0a5c85c6a8ab0",
+  "private_patient_metrics_sha256": "beb5193ad750c5c2c6ca7ce7a21ba609ee5f345505cdf10903852bf6f53c052b",
+  "test_access": false,
+  "patient_level_rows_included": false
+}
