@@ -1,0 +1,10 @@
+{
+  "experiment_id": "RESOLUTION-ROBUSTNESS-SCREENING-001",
+  "stage": "technical_screening_frozen_model_not_confirmatory",
+  "protocol_sha256": "ccdb01aad9790e5e45bc6a1ea17c1ece5b2e1fb0f127f647e8ecf1264db32d6e",
+  "checkpoint_sha256": "8aecb07cf37970b39a9bce7de52942aab933d8ce15748fb0192d39ebdd4212fe",
+  "private_metadata_sha256": "1f519f1d7f989ad268de9a733541f173350b16acdb26277f09a0709b6814763d",
+  "private_phase_metrics_sha256": "bd350b3a002c31734b64592b0a0565225e205326565c6ac47557d69ca1d55833",
+  "test_access": false,
+  "patient_level_rows_included": false
+}
