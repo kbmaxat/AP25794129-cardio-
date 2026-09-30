@@ -1,0 +1,202 @@
+{
+  "experiment_id": "RESOLUTION-ROBUSTNESS-CONFIRMATORY-001",
+  "stage": "confirmatory",
+  "n_seeds": 6,
+  "n_dev_patients": 80,
+  "test_access": false,
+  "protocol_sha256": "3c3159b6f1bef0d42584cf88f2d2a8fe473efde74a9b7e7a07614fe78af29726",
+  "arm_variant_means": {
+    "clean_baseline": {
+      "clean": {
+        "dice": 0.9240989529471709,
+        "relative_area_error": 0.09533179785415616,
+        "mean_surface_distance_px": 5.05168187605838,
+        "hausdorff_distance_px": 18.042674459020297
+      },
+      "2x_plain": {
+        "dice": 0.9169861487613941,
+        "relative_area_error": 0.1055266159454248,
+        "mean_surface_distance_px": 5.609473614146312,
+        "hausdorff_distance_px": 18.913329466680686
+      },
+      "4x_plain": {
+        "dice": 0.8957580104297579,
+        "relative_area_error": 0.12290338351991845,
+        "mean_surface_distance_px": 7.187735289459427,
+        "hausdorff_distance_px": 23.11200085033973
+      }
+    },
+    "degradation_augmented": {
+      "clean": {
+        "dice": 0.9220238071434511,
+        "relative_area_error": 0.09777818393276404,
+        "mean_surface_distance_px": 5.366884105900923,
+        "hausdorff_distance_px": 20.054189686477184
+      },
+      "2x_plain": {
+        "dice": 0.9204987248212966,
+        "relative_area_error": 0.09852607304787855,
+        "mean_surface_distance_px": 5.512150866910815,
+        "hausdorff_distance_px": 20.712915301074585
+      },
+      "4x_plain": {
+        "dice": 0.9070426727728591,
+        "relative_area_error": 0.10704029901985732,
+        "mean_surface_distance_px": 6.548667993644873,
+        "hausdorff_distance_px": 23.352403263250988
+      }
+    }
+  },
+  "contrasts": {
+    "replication_check_baseline_2x_minus_clean": {
+      "dice": {
+        "mean_delta": -0.007112804185776844,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          -0.010128643554516143,
+          -0.003971221635674494
+        ]
+      },
+      "relative_area_error": {
+        "mean_delta": 0.010194818091268648,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          0.003812487343022895,
+          0.016411942365324995
+        ]
+      },
+      "mean_surface_distance_px": {
+        "mean_delta": 0.5577917380879323,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          0.32411332422867417,
+          0.793626545863226
+        ]
+      },
+      "hausdorff_distance_px": {
+        "mean_delta": 0.870655007660389,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          -0.01709589105099439,
+          1.8556981384878357
+        ]
+      }
+    },
+    "primary_augmented_minus_baseline_on_2x": {
+      "dice": {
+        "mean_delta": 0.0035125760599024557,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          -0.0019520779968790099,
+          0.008560125682272211
+        ]
+      },
+      "relative_area_error": {
+        "mean_delta": -0.0070005428975462546,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          -0.017324984061117377,
+          0.003379058818311756
+        ]
+      },
+      "mean_surface_distance_px": {
+        "mean_delta": -0.09732274723549685,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          -0.5673920466378332,
+          0.42153809845447554
+        ]
+      },
+      "hausdorff_distance_px": {
+        "mean_delta": 1.7995858343938986,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          -0.817544676264127,
+          5.461682808833818
+        ]
+      }
+    },
+    "guardrail_augmented_minus_baseline_on_clean": {
+      "dice": {
+        "mean_delta": -0.00207514580371995,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          -0.0069221167759819695,
+          0.0025235364383258013
+        ]
+      },
+      "relative_area_error": {
+        "mean_delta": 0.0024463860786078863,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          -0.005448528326936545,
+          0.010802285441066596
+        ]
+      },
+      "mean_surface_distance_px": {
+        "mean_delta": 0.3152022298425436,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          -0.11584241334038474,
+          0.8144577677703152
+        ]
+      },
+      "hausdorff_distance_px": {
+        "mean_delta": 2.0115152274568877,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          -0.37410544368127974,
+          5.062006886986396
+        ]
+      }
+    },
+    "descriptive_augmented_minus_baseline_on_4x": {
+      "dice": {
+        "mean_delta": 0.011284662343101177,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          0.002681726782107949,
+          0.019535908827670263
+        ]
+      },
+      "relative_area_error": {
+        "mean_delta": -0.015863084500061138,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          -0.029970447863302625,
+          -0.0026156657277959412
+        ]
+      },
+      "mean_surface_distance_px": {
+        "mean_delta": -0.6390672958145539,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          -1.413813228153934,
+          0.2441616367393484
+        ]
+      },
+      "hausdorff_distance_px": {
+        "mean_delta": 0.24040241291125616,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          -4.436002908001344,
+          6.308091808731358
+        ]
+      }
+    },
+    "descriptive_residual_gap_augmented_2x_minus_baseline_clean": {
+      "dice": {
+        "mean_delta": -0.0036002281258743886,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          -0.008812809262526464,
+          0.0010692732163700913
+        ]
+      },
+      "relative_area_error": {
+        "mean_delta": 0.003194275193722394,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          -0.004993482156614445,
+          0.01220808680983747
+        ]
+      },
+      "mean_surface_distance_px": {
+        "mean_delta": 0.4604689908524354,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          0.030094958009819203,
+          0.9519890702453753
+        ]
+      },
+      "hausdorff_distance_px": {
+        "mean_delta": 2.670240842054288,
+        "crossed_patient_seed_bootstrap_95_ci": [
+          -0.08158594510207572,
+          6.280964180628461
+        ]
+      }
+    }
+  }
+}

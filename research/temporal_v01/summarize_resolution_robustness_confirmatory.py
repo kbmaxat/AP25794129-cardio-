@@ -41,6 +41,13 @@ CONTRASTS = {
     "descriptive_augmented_minus_baseline_on_4x": (
         ("degradation_augmented", "4x_plain"), ("clean_baseline", "4x_plain"),
     ),
+    # Added post-hoc after independent review (see protocol "Post-hoc correction"): no
+    # threshold was pre-registered for this contrast. It answers "how much of the original
+    # clean-vs-degraded gap remains after augmentation, in absolute terms" directly, instead
+    # of only comparing within-arm or within-variant differences. Descriptive only.
+    "descriptive_residual_gap_augmented_2x_minus_baseline_clean": (
+        ("degradation_augmented", "2x_plain"), ("clean_baseline", "clean"),
+    ),
 }
 
 

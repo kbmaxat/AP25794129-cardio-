@@ -1,0 +1,12 @@
+{
+  "note": "This directory supersedes public_results/resolution_robustness_confirmatory_v01_20260930/ after an independent review found overstated conclusions. No retraining was done; the underlying per-seed/per-arm dev metrics are identical. This version differs only by: (1) adding the descriptive_residual_gap_augmented_2x_minus_baseline_clean contrast, computed post-hoc from already-saved data, and (2) the corrected interpretation recorded in the local research journal (see ЖУРНАЛ_ИССЛЕДОВАНИЯ.md, entry dated after 30 September 2026, 'Исправление интерпретации после независимой проверки'). The original directory is kept for audit-trail transparency, not because its conclusions still stand.",
+  "superseded_directory": "resolution_robustness_confirmatory_v01_20260930",
+  "reason_for_correction": [
+    "Status overstated as fully independent confirmatory; the 80 dev patients were previously used for checkpoint selection in earlier experiments in this directory (geometry, correction-penalty, base pilots), so this run only removes the immediate selection/evaluation overlap within itself.",
+    "MSD benefit on the primary contrast was described as 'not achieved' when the 95% CI [-0.567, 0.422] actually still contains the pre-registered practical-benefit value of -0.5 px: benefit is not confirmed, but not excluded either.",
+    "Guardrail was reported as satisfied using only the MSD upper bound (+0.814 px); the relative-area-error guardrail upper bound (+0.01080) exceeds the +0.01 threshold and was not flagged.",
+    "The Dice practical-benefit threshold (+0.01) was implicitly treated as equivalent to 'closing the gap', while the original degradation loss was only 0.00711: even a full recovery would not necessarily have cleared +0.01. A direct residual-gap contrast against the undegraded baseline was missing.",
+    "Bootstrap replicate count used (50000) deviates from the number stated in the registered protocol text (10000); this was an unregistered deviation, not a fabrication, but should have been disclosed.",
+    "The conclusion drew a normative next step ('move to architecture v0.2') from a single unconfirmed negative result, which is not a valid inference: failure to show one fix sufficient does not establish that a new module is necessary."
+  ]
+}

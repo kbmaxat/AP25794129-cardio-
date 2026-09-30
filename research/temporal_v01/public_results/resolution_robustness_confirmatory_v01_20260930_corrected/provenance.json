@@ -1,0 +1,23 @@
+{
+  "experiment_id": "RESOLUTION-ROBUSTNESS-CONFIRMATORY-001",
+  "stage": "confirmatory",
+  "protocol_sha256": "3c3159b6f1bef0d42584cf88f2d2a8fe473efde74a9b7e7a07614fe78af29726",
+  "private_metadata_sha256": "c467ded186c4866565a7e311ac146a9050f16a238a636eda3d2eefdd407790e9",
+  "private_subsplit_sha256": "feb22be67791808f3599c9c649471e9acfab10dcf3be17dc4945fc056a3e5f67",
+  "per_seed_dev_metrics_sha256": {
+    "seed2027_clean_baseline/dev_phase_metrics.csv": "eb8e1d46001899b2a3ae7af471c82dd478fc99cac0ba7e98306ca8b9ebc56e4b",
+    "seed2028_clean_baseline/dev_phase_metrics.csv": "7083328c7430d9ad24dd1a0abc9f046bf91f295de7bbb21202251e026e9a6339",
+    "seed2029_clean_baseline/dev_phase_metrics.csv": "53bd97eb172a88de229fc1ba437ca0c0dc5efd8e69f33d7aee5803e501117ee1",
+    "seed2030_clean_baseline/dev_phase_metrics.csv": "1459d73e16ce5c7d0c7f60afee6dcd3100f381be3bd1f76c969c78cc174acd60",
+    "seed2031_clean_baseline/dev_phase_metrics.csv": "64e40d244cf29a131591ff4b9c6a6d9df0c829ad7bc9724bb5b26311ae9a1e44",
+    "seed2032_clean_baseline/dev_phase_metrics.csv": "0a8f0be2183c2979517575f81116460661735ae9235114d7e11a1c99b197dfc2",
+    "seed2027_degradation_augmented/dev_phase_metrics.csv": "46b28159192d1095cc531b3b953cdf75c865a191f859f8f7d7f7eabd4eaa37e2",
+    "seed2028_degradation_augmented/dev_phase_metrics.csv": "a489d4c1069d920d9eadc2b2cfd57c6998a678e194a1dfc5e8296b5e8508d558",
+    "seed2029_degradation_augmented/dev_phase_metrics.csv": "849c5ec182aac918ac81958692917b224707fd1445d670f5c47a9a2daf9bed4f",
+    "seed2030_degradation_augmented/dev_phase_metrics.csv": "5560af353abddf431ae60143c85fae3d7f5da186ca620832a9211261b357ada7",
+    "seed2031_degradation_augmented/dev_phase_metrics.csv": "41be2c794713ade363d5b171ccc256352a3a163368d811dff8e640cce826a67a",
+    "seed2032_degradation_augmented/dev_phase_metrics.csv": "c1f51ef2f2ee455ac363cdd92658e32ad8cb725adccd8e9c15ded4af4f213e1a"
+  },
+  "test_access": false,
+  "patient_level_rows_included": false
+}
