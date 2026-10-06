@@ -1,0 +1,472 @@
+{
+  "experiment_id": "RESOLUTION-AUGMENTATION-ECHONET-EXTERNAL-001",
+  "stage": "external_evaluation_fixed_candidates",
+  "status_note": "External evaluation of fixed candidates on EchoNet-Dynamic VAL. All candidates are reported; the cohort must not be reused to select one and claim a new confirmation.",
+  "dataset": "EchoNet-Dynamic",
+  "split": "VAL",
+  "n_videos": 1173,
+  "n_videos_listed_in_split": 1288,
+  "n_videos_excluded_undecodable": 115,
+  "n_annotated_frames": 2346,
+  "n_seeds": 6,
+  "bootstrap_replicates": 10000,
+  "official_CAMUS_validation_or_testing_accessed": false,
+  "EchoNet_train_or_test_videos_opened": false,
+  "candidate_configs": {
+    "p025_2x": {
+      "degraded_condition": "2x_plain",
+      "means": {
+        "clean_baseline_clean": {
+          "dice": 0.012841252864077307,
+          "relative_area_error": 0.8733268187997364,
+          "mean_surface_distance_px": 69.0828213071446,
+          "hausdorff_distance_px": 85.19680638296717
+        },
+        "clean_baseline_degraded": {
+          "dice": 0.017162505018608772,
+          "relative_area_error": 0.8675892395863243,
+          "mean_surface_distance_px": 70.29845295402818,
+          "hausdorff_distance_px": 86.46489745538264
+        },
+        "augmentation_clean": {
+          "dice": 0.005613350685002462,
+          "relative_area_error": 0.8981477920610633,
+          "mean_surface_distance_px": 79.0336288748135,
+          "hausdorff_distance_px": 93.44820382031835
+        },
+        "augmentation_degraded": {
+          "dice": 0.00780034389710894,
+          "relative_area_error": 0.8859536014293884,
+          "mean_surface_distance_px": 75.86064634415084,
+          "hausdorff_distance_px": 90.89866825562531
+        }
+      },
+      "contrasts": {
+        "baseline_degradation_degraded_minus_clean": {
+          "dice": {
+            "mean_delta": 0.004321252154531468,
+            "crossed_video_seed_bootstrap_95_ci": [
+              0.0002672249190268631,
+              0.009060164164130764
+            ]
+          },
+          "relative_area_error": {
+            "mean_delta": -0.005737579213412141,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.031034825145808635,
+              0.024445027741795706
+            ]
+          },
+          "mean_surface_distance_px": {
+            "mean_delta": 1.215631646883574,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -7.65822594680708,
+              12.404642119513106
+            ]
+          },
+          "hausdorff_distance_px": {
+            "mean_delta": 1.268091072415467,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -6.238589243589389,
+              10.682812814599195
+            ]
+          }
+        },
+        "augmentation_minus_baseline_on_degraded": {
+          "dice": {
+            "mean_delta": -0.009362161121499834,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.017781350206196367,
+              -0.0016137462135986803
+            ]
+          },
+          "relative_area_error": {
+            "mean_delta": 0.018364361843064256,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.007035771458269579,
+              0.04267576179483092
+            ]
+          },
+          "mean_surface_distance_px": {
+            "mean_delta": 5.5621933901226726,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -8.08172375828402,
+              19.794939168003914
+            ]
+          },
+          "hausdorff_distance_px": {
+            "mean_delta": 4.433770800242687,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -5.797022875162423,
+              15.128117582277575
+            ]
+          }
+        },
+        "clean_guardrail_augmentation_minus_baseline": {
+          "dice": {
+            "mean_delta": -0.007227902179074842,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.012445693245624258,
+              -0.001886201097460414
+            ]
+          },
+          "relative_area_error": {
+            "mean_delta": 0.02482097326132692,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.011007093301559431,
+              0.055379390891514016
+            ]
+          },
+          "mean_surface_distance_px": {
+            "mean_delta": 9.95080756766892,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -3.8428012019661923,
+              24.873322566086866
+            ]
+          },
+          "hausdorff_distance_px": {
+            "mean_delta": 8.25139743735119,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -3.354328555637775,
+              19.434959041082056
+            ]
+          }
+        },
+        "residual_gap_augmentation_degraded_minus_baseline_clean": {
+          "dice": {
+            "mean_delta": -0.005040908966968367,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.010290956350663646,
+              0.0007558126067940189
+            ]
+          },
+          "relative_area_error": {
+            "mean_delta": 0.012626782629652122,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.02855247880877819,
+              0.04481648147102083
+            ]
+          },
+          "mean_surface_distance_px": {
+            "mean_delta": 6.777825037006246,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -7.665421120608072,
+              21.510555006915304
+            ]
+          },
+          "hausdorff_distance_px": {
+            "mean_delta": 5.701861872658153,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -6.086340105413942,
+              17.000312096645846
+            ]
+          }
+        }
+      }
+    },
+    "p075_2x": {
+      "degraded_condition": "2x_plain",
+      "means": {
+        "clean_baseline_clean": {
+          "dice": 0.012841252864077307,
+          "relative_area_error": 0.8733268187997364,
+          "mean_surface_distance_px": 69.0828213071446,
+          "hausdorff_distance_px": 85.19680638296717
+        },
+        "clean_baseline_degraded": {
+          "dice": 0.017162505018608772,
+          "relative_area_error": 0.8675892395863243,
+          "mean_surface_distance_px": 70.29845295402818,
+          "hausdorff_distance_px": 86.46489745538264
+        },
+        "augmentation_clean": {
+          "dice": 0.011678479504334139,
+          "relative_area_error": 0.8865962047357339,
+          "mean_surface_distance_px": 80.05644960089435,
+          "hausdorff_distance_px": 95.02764830558829
+        },
+        "augmentation_degraded": {
+          "dice": 0.013799315306990653,
+          "relative_area_error": 0.8733999657179983,
+          "mean_surface_distance_px": 76.88932878789613,
+          "hausdorff_distance_px": 92.62700579026254
+        }
+      },
+      "contrasts": {
+        "baseline_degradation_degraded_minus_clean": {
+          "dice": {
+            "mean_delta": 0.004321252154531468,
+            "crossed_video_seed_bootstrap_95_ci": [
+              0.00028085778897939085,
+              0.009177370914525534
+            ]
+          },
+          "relative_area_error": {
+            "mean_delta": -0.005737579213412141,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.03131012298308125,
+              0.024916379813208083
+            ]
+          },
+          "mean_surface_distance_px": {
+            "mean_delta": 1.215631646883574,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -7.567463816026855,
+              12.313617371712422
+            ]
+          },
+          "hausdorff_distance_px": {
+            "mean_delta": 1.268091072415467,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -6.105074839001129,
+              10.932820696709904
+            ]
+          }
+        },
+        "augmentation_minus_baseline_on_degraded": {
+          "dice": {
+            "mean_delta": -0.0033631897116181216,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.01782491138243902,
+              0.011601290814916232
+            ]
+          },
+          "relative_area_error": {
+            "mean_delta": 0.005810726131674099,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.05304579976694318,
+              0.06895903683389344
+            ]
+          },
+          "mean_surface_distance_px": {
+            "mean_delta": 6.5908758338679725,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -19.761483745762263,
+              35.64080069876899
+            ]
+          },
+          "hausdorff_distance_px": {
+            "mean_delta": 6.162108334879918,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -15.439328730732408,
+              30.263559597466806
+            ]
+          }
+        },
+        "clean_guardrail_augmentation_minus_baseline": {
+          "dice": {
+            "mean_delta": -0.0011627733597431662,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.011467851979733665,
+              0.010796513471250099
+            ]
+          },
+          "relative_area_error": {
+            "mean_delta": 0.013269385935997632,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.03380599445778177,
+              0.05959662143991635
+            ]
+          },
+          "mean_surface_distance_px": {
+            "mean_delta": 10.973628293749755,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -13.135417119537998,
+              35.04211060950981
+            ]
+          },
+          "hausdorff_distance_px": {
+            "mean_delta": 9.830841922621117,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -9.269591174139586,
+              29.734678612480124
+            ]
+          }
+        },
+        "residual_gap_augmentation_degraded_minus_baseline_clean": {
+          "dice": {
+            "mean_delta": 0.0009580624429133467,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.011034703606567628,
+              0.015331551305735552
+            ]
+          },
+          "relative_area_error": {
+            "mean_delta": 7.314691826195631e-05,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.05296339119433593,
+              0.0520705235198509
+            ]
+          },
+          "mean_surface_distance_px": {
+            "mean_delta": 7.806507480751547,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -15.678498468238574,
+              31.472481428774593
+            ]
+          },
+          "hausdorff_distance_px": {
+            "mean_delta": 7.4301994072953885,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -11.318679804979725,
+              27.028588397419348
+            ]
+          }
+        }
+      }
+    },
+    "p050_4x": {
+      "degraded_condition": "4x_plain",
+      "means": {
+        "clean_baseline_clean": {
+          "dice": 0.012841252864077307,
+          "relative_area_error": 0.8733268187997364,
+          "mean_surface_distance_px": 69.0828213071446,
+          "hausdorff_distance_px": 85.19680638296717
+        },
+        "clean_baseline_degraded": {
+          "dice": 0.025759209925511065,
+          "relative_area_error": 0.8617418399066549,
+          "mean_surface_distance_px": 72.03893809455178,
+          "hausdorff_distance_px": 87.60971608301271
+        },
+        "augmentation_clean": {
+          "dice": 0.006703265553329995,
+          "relative_area_error": 0.8949430460247823,
+          "mean_surface_distance_px": 82.07598789184294,
+          "hausdorff_distance_px": 96.30727280910767
+        },
+        "augmentation_degraded": {
+          "dice": 0.008859928945503314,
+          "relative_area_error": 0.8637538903763589,
+          "mean_surface_distance_px": 71.95557058953926,
+          "hausdorff_distance_px": 87.94216531000734
+        }
+      },
+      "contrasts": {
+        "baseline_degradation_degraded_minus_clean": {
+          "dice": {
+            "mean_delta": 0.01291795706143376,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.0009585316415681959,
+              0.030676508469229744
+            ]
+          },
+          "relative_area_error": {
+            "mean_delta": -0.011584978893081447,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.06578089475939768,
+              0.04008748431494679
+            ]
+          },
+          "mean_surface_distance_px": {
+            "mean_delta": 2.9561167874071836,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -13.222009144155615,
+              21.034898938753315
+            ]
+          },
+          "hausdorff_distance_px": {
+            "mean_delta": 2.412909700045551,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -11.185585124438658,
+              17.49601092323168
+            ]
+          }
+        },
+        "augmentation_minus_baseline_on_degraded": {
+          "dice": {
+            "mean_delta": -0.016899280980007755,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.037245857006735085,
+              -0.003205895500334666
+            ]
+          },
+          "relative_area_error": {
+            "mean_delta": 0.002012050469703873,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.0687440487676948,
+              0.07338356521732209
+            ]
+          },
+          "mean_surface_distance_px": {
+            "mean_delta": -0.08336750501251954,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -24.538323327410797,
+              22.445640957184107
+            ]
+          },
+          "hausdorff_distance_px": {
+            "mean_delta": 0.3324492269946321,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -19.231666733568833,
+              19.144298938285736
+            ]
+          }
+        },
+        "clean_guardrail_augmentation_minus_baseline": {
+          "dice": {
+            "mean_delta": -0.006137987310747312,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.012372286521343168,
+              2.419673942441711e-05
+            ]
+          },
+          "relative_area_error": {
+            "mean_delta": 0.02161622722504593,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.006642137277992257,
+              0.04899237269026976
+            ]
+          },
+          "mean_surface_distance_px": {
+            "mean_delta": 12.993166584698345,
+            "crossed_video_seed_bootstrap_95_ci": [
+              0.003662323998022502,
+              26.133388704772614
+            ]
+          },
+          "hausdorff_distance_px": {
+            "mean_delta": 11.110466426140517,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.3362085482116939,
+              22.3467591130648
+            ]
+          }
+        },
+        "residual_gap_augmentation_degraded_minus_baseline_clean": {
+          "dice": {
+            "mean_delta": -0.003981323918573992,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.010560585189840105,
+              0.0026855888578710676
+            ]
+          },
+          "relative_area_error": {
+            "mean_delta": -0.009572928423377569,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -0.038949912410320066,
+              0.016094286200766715
+            ]
+          },
+          "mean_surface_distance_px": {
+            "mean_delta": 2.8727492823946648,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -5.375666238599032,
+              11.283634921764323
+            ]
+          },
+          "hausdorff_distance_px": {
+            "mean_delta": 2.7453589270401833,
+            "crossed_video_seed_bootstrap_95_ci": [
+              -4.334120574987532,
+              9.761887028157862
+            ]
+          }
+        }
+      }
+    }
+  },
+  "protocol_sha256": "b534e342c102526db6802694c54af965b8e0e683c33059fbb22026f928676668",
+  "interpretation_note": "CAMUS-trained segmenters had near-zero absolute EchoNet VAL Dice; relative augmentation contrasts are floor-limited and do not demonstrate useful cross-dataset segmentation or resolution robustness."
+}
